@@ -1,3 +1,4 @@
+using FoodKing.Services;
 using FoodKing.Services.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<ICustomerService, CustomerService>();
+builder.Services.AddTransient<IFoodService, FoodService>();
 
 builder.Services.AddDbContext<FoodKingContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
