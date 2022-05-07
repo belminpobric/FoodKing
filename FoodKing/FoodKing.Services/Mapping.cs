@@ -1,4 +1,4 @@
-﻿using FoodKing.Model;
+﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public interface ICustomerService
+    public class Mapping : Profile
     {
-        IEnumerable<Customer> GetCustomers();
-
+        public Mapping()
+        {
+            CreateMap<Database.Customer, Model.Customer>();
+        }
     }
 }

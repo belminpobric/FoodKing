@@ -1,5 +1,5 @@
-﻿using FoodKing.Services;
-using FoodKing.Services.Database;
+﻿using FoodKing.Model;
+using FoodKing.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodKing.Controllers
@@ -14,9 +14,9 @@ namespace FoodKing.Controllers
             customerService = customerservice;
         }
         [HttpGet]
-        public IEnumerable<Customer> Get()
+        public IEnumerable<Model.Customer> Get()
         {
-            return new List<Customer>();
+            return customerService.GetCustomers();
         }
     }
 }

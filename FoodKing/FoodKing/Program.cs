@@ -13,6 +13,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<IFoodService, FoodService>();
 
+builder.Services.AddAutoMapper(typeof(ICustomerService));
+
 builder.Services.AddDbContext<FoodKingContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();

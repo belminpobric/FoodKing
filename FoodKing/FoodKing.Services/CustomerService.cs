@@ -1,4 +1,6 @@
-﻿using FoodKing.Services.Database;
+﻿using AutoMapper;
+using FoodKing.Model;
+using FoodKing.Services.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +12,19 @@ namespace FoodKing.Services
     public class CustomerService : ICustomerService
     {
         public FoodKingContext _context { get; set; }
-        public CustomerService(FoodKingContext context)
+        public IMapper Mapper { get; set; }
+        public CustomerService(FoodKingContext context, IMapper mapper)
         {
             _context = context;
+            Mapper = mapper;
         }
-        public IEnumerable<Customer> GetCustomers()
+        public IEnumerable<Model.Customer> GetCustomers()
         {
-            throw new NotImplementedException();
-        }
+            List<Model.Customer> list = new List<Model.Customer>();
+
+            var result = _context.Customers.ToList();
+
+            return Mapper.Map<List<Model.Customer>>(result);
+        }  
     }
 }
