@@ -12,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<IFoodService, FoodService>();
+builder.Services.AddTransient<IMenuService, MenuService>();
 
 builder.Services.AddAutoMapper(typeof(ICustomerService));
 

@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public interface IFoodService
+    public interface IFoodService : IService<FoodItem>
     {
-        IEnumerable<FoodItem> GetFoodItems();
     }
 }

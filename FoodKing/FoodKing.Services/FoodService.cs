@@ -1,4 +1,5 @@
-﻿using FoodKing.Services.Database;
+﻿using AutoMapper;
+using FoodKing.Services.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +8,11 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public class FoodService : IFoodService
+    public class FoodService : BaseService<Database.FoodItem, Database.FoodItem> , IFoodService
     {
-        public FoodKingContext _context { get; set; }
-        public FoodService(FoodKingContext context)
+        public FoodService(FoodKingContext context, IMapper mapper) : base(context, mapper)
         {
             _context = context;
-        }
-        public IEnumerable<FoodItem> GetFoodItems()
-        {
-            return _context.FoodItems.ToList();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace FoodKing.Controllers
         [HttpGet]
         public IEnumerable<Model.Customer> Get()
         {
-            return customerService.GetCustomers();
+            return customerService.Get();
         }
     }
 }

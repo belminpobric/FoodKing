@@ -1,30 +1,27 @@
 ﻿using AutoMapper;
-using FoodKing.Model;
 using FoodKing.Services.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public class CustomerService : ICustomerService
+    public class CustomerService : BaseService<Model.Customer, Database.Customer>, ICustomerService
     {
-        public FoodKingContext _context { get; set; }
-        public IMapper Mapper { get; set; }
-        public CustomerService(FoodKingContext context, IMapper mapper)
+        public CustomerService(FoodKingContext context, IMapper mapper): base(context,mapper)
         {
-            _context = context;
-            Mapper = mapper;
         }
-        public IEnumerable<Model.Customer> GetCustomers()
-        {
-            List<Model.Customer> list = new List<Model.Customer>();
+        //public IEnumerable<Model.Customer> Get()
+        //{
+        //    List<Model.Customer> list = new List<Model.Customer>();
 
-            var result = _context.Customers.ToList();
+        //    var result = _context.Customers.ToList();
 
-            return Mapper.Map<List<Model.Customer>>(result);
-        }  
+        //    return Mapper.Map<List<Model.Customer>>(result);
+        //}
+
+        //public Model.Customer GetById(int id)
+        //{
+        //    var result = _context.Customers.Find(id);
+
+        //    return Mapper.Map<Model.Customer>(result);
+        //}
     }
 }
