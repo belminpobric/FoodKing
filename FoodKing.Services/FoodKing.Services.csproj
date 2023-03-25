@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FoodKing.Model\FoodKing.Model.csproj" />
+  </ItemGroup>
+
 </Project>
