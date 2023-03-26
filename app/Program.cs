@@ -17,6 +17,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<FoodKingContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddAutoMapper(typeof(IUserService));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

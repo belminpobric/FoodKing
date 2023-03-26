@@ -1,4 +1,5 @@
 ﻿using FoodKing.Model;
+using FoodKing.Model.Requests;
 using FoodKing.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,5 +24,17 @@ namespace app.Controllers
         {
             return await _service.Get();
         }
+
+        [HttpPost]
+        public User Insert(UserInsertRequest request)
+        {
+            return _service.Insert(request);
+        }
+
+        //[HttpPut("{id}")]
+        //public Model.Korisnici Update(int id, KorisniciUpdateRequest request)
+        //{
+        //    return _service.Update(id, request);
+        //}
     }
 }

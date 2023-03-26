@@ -13,9 +13,9 @@ public partial class OrderDetail
 
     public bool? IsAccepted { get; set; }
 
-    public int UserId { get; set; }
-
     public int ProductId { get; set; }
+
+    public int UserId { get; set; }
 
     public virtual Product Product { get; set; } = null!;
 

@@ -33,11 +33,10 @@ public partial class FoodKingContext : DbContext
     {
         modelBuilder.Entity<Menu>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Menu__3214EC07403D0BE7");
+            entity.HasKey(e => e.Id).HasName("PK__Menu__3214EC07595D505B");
 
             entity.ToTable("Menu");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .HasColumnName("title");
@@ -45,9 +44,8 @@ public partial class FoodKingContext : DbContext
 
         modelBuilder.Entity<MenuHasProduct>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MenuHasP__3214EC0769B709A1");
+            entity.HasKey(e => e.Id).HasName("PK__MenuHasP__3214EC07CEED5881");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.MenuId).HasColumnName("menuId");
             entity.Property(e => e.ProductId).HasColumnName("productId");
 
@@ -62,9 +60,8 @@ public partial class FoodKingContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__OrderDet__3214EC071D1A4401");
+            entity.HasKey(e => e.Id).HasName("PK__OrderDet__3214EC079853F2FB");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Details)
                 .HasMaxLength(255)
                 .HasColumnName("details");
@@ -83,14 +80,13 @@ public partial class FoodKingContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Order_User_FK");
+                .HasConstraintName("FK_Order_User");
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Products__3214EC07A864FB39");
+            entity.HasKey(e => e.Id).HasName("PK__Products__3214EC075A0A9E2A");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .HasColumnName("title");
@@ -98,9 +94,8 @@ public partial class FoodKingContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07B47D1E8D");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07D5F60FCE");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Address)
                 .HasMaxLength(255)
                 .HasColumnName("address");
