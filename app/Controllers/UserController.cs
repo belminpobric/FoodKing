@@ -25,12 +25,23 @@ namespace app.Controllers
             return await _service.Get();
         }
 
+        [HttpGet("{id}")]
+        public async Task<User> GetById(int id)
+        {
+            return await _service.GetByID(id);
+        }
+
         [HttpPost]
         public User Insert(UserInsertRequest request)
         {
             return _service.Insert(request);
         }
 
+        [HttpPut("{id}")]
+        public async Task<User> Update(int id, UserUpdateRequest request)
+        {
+            return await _service.Update(id, request);
+        }
         //[HttpPut("{id}")]
         //public Model.Korisnici Update(int id, KorisniciUpdateRequest request)
         //{

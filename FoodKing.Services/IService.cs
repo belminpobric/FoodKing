@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public interface IUserService : IService<Model.User>
+    public interface IService<T>
     {
-        Model.User Insert(UserInsertRequest request);
-        Task<Model.User> Update(int id, UserUpdateRequest request);
+        Task<List<T>> Get();
+        Task<T> GetByID(int id);
     }
 }

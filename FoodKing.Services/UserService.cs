@@ -12,22 +12,12 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public class UserService : IUserService
+    public class UserService : BaseService<Model.User, Database.User>, IUserService
     {
-        FoodKingContext _context;
-        public IMapper _mapper { get; set; }
-
-        public UserService(FoodKingContext context, IMapper mapper)
+        public UserService(FoodKingContext context, IMapper mapper) : base(context, mapper)
         {
             _context = context;
             _mapper = mapper;
-        }
-
-        public async Task<List<Model.User>> Get()
-        {
-            var entityList = await _context.Users.ToListAsync();
-
-            return _mapper.Map<List<Model.User>>(entityList);
         }
 
         public Model.User Insert(UserInsertRequest request)
@@ -52,9 +42,19 @@ namespace FoodKing.Services
             return BitConverter.ToString(hashedBytes);
         }
 
-        public Model.User Update(int id, UserUpdateRequest request)
+        public async Task<Model.User> Update(int id, UserUpdateRequest request)
         {
-            throw new NotImplementedException();
+            var result = await _context.Users.SingleOrDefaultAsync(b => b.Id == id);
+            var user = new Model.User();
+            if (result != null)
+            {
+                _mapper.Map(request, result);
+                await _context.SaveChangesAsync();
+
+                return _mapper.Map(result, user);
+            }
+            return await Task.FromResult(user);
         }
+
     }
 }
