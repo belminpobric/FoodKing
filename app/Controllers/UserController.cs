@@ -1,5 +1,6 @@
 ﻿using FoodKing.Model;
 using FoodKing.Model.Requests;
+using FoodKing.Model.SearchObjects;
 using FoodKing.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,29 +9,16 @@ namespace app.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController : Controller
+    public class UserController : BaseController<User, UserSearchObject>
     {
         private readonly IUserService _service;
         private readonly ILogger<UserController> _logger;
 
-        public UserController(ILogger<UserController> logger, IUserService service)
+        public UserController(ILogger<UserController> logger, IUserService service) : base(logger, service)
         {
             _logger = logger;
             _service = service;
         }
-
-        [HttpGet()]
-        public async Task<IEnumerable<User>> Get()
-        {
-            return await _service.Get();
-        }
-
-        [HttpGet("{id}")]
-        public async Task<User> GetById(int id)
-        {
-            return await _service.GetByID(id);
-        }
-
         [HttpPost]
         public User Insert(UserInsertRequest request)
         {
@@ -42,10 +30,5 @@ namespace app.Controllers
         {
             return await _service.Update(id, request);
         }
-        //[HttpPut("{id}")]
-        //public Model.Korisnici Update(int id, KorisniciUpdateRequest request)
-        //{
-        //    return _service.Update(id, request);
-        //}
     }
 }

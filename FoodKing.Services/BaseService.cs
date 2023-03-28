@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FoodKing.Model;
+using FoodKing.Model.SearchObjects;
 using FoodKing.Services.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public class BaseService<T, TDb> : IService<T> where T : class where TDb : class
+    public class BaseService<T, TDb, TSearch> : IService<T, TSearch> where T : class where TDb : class where TSearch : BaseSearchObject
     {
         protected FoodKingContext _context;
         protected IMapper _mapper { get; set; }
@@ -20,18 +22,34 @@ namespace FoodKing.Services
             _mapper = mapper;
         }
 
-        public async Task<List<T>> Get()
+        public virtual async Task<PagedResult<T>> Get(TSearch? search = null)
         {
-            var entityList = await _context.Set<TDb>().ToListAsync();
+            var query = _context.Set<TDb>().AsQueryable();
 
-            return _mapper.Map<List<T>>(entityList);
+            PagedResult<T> result = new PagedResult<T>();
+
+            query = AddFilter(query, search);
+
+            result.Count = await query.CountAsync();
+
+            if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
+            {
+                query = query.Take(search.PageSize.Value).Skip(search.Page.Value * search.PageSize.Value);  
+            }
+            result.Result = _mapper.Map<List<T>>(await query.ToListAsync());
+            return result;
         }
 
-        public async Task<T> GetByID(int id)
+        public virtual async Task<T> GetByID(int id)
         {
             var entity = await _context.Set<TDb>().FindAsync(id);
 
             return _mapper.Map<T>(entity);
+        }
+
+        public virtual IQueryable<TDb> AddFilter(IQueryable<TDb> query, TSearch? search = null)
+        {
+            return query;
         }
     }
 }

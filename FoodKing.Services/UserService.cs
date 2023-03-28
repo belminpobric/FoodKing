@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FoodKing.Model;
 using FoodKing.Model.Requests;
+using FoodKing.Model.SearchObjects;
 using FoodKing.Services.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public class UserService : BaseService<Model.User, Database.User>, IUserService
+    public class UserService : BaseService<Model.User, Database.User, UserSearchObject>, IUserService
     {
         public UserService(FoodKingContext context, IMapper mapper) : base(context, mapper)
         {
@@ -56,5 +57,19 @@ namespace FoodKing.Services
             return await Task.FromResult(user);
         }
 
+        public override IQueryable<Database.User> AddFilter(IQueryable<Database.User> query, UserSearchObject? search = null)
+        {
+            if (!string.IsNullOrWhiteSpace(search?.FirstName))
+            {
+                query = query.Where(x => x.FirstName.StartsWith(search.FirstName));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search?.LastName))
+            {
+                query = query.Where(x => x.LastName.StartsWith(search.LastName));
+            }
+
+            return query;
+        }
     }
 }
