@@ -9,15 +9,13 @@ public partial class OrderDetail
 
     public string Details { get; set; } = null!;
 
-    public string Price { get; set; } = null!;
-
-    public bool? IsAccepted { get; set; }
-
     public int ProductId { get; set; }
 
-    public int UserId { get; set; }
+    public int? CustomerId { get; set; }
+
+    public virtual Customer? Customer { get; set; }
+
+    public virtual ICollection<OrderHasOrderDetail> OrderHasOrderDetails { get; } = new List<OrderHasOrderDetail>();
 
     public virtual Product Product { get; set; } = null!;
-
-    public virtual User User { get; set; } = null!;
 }

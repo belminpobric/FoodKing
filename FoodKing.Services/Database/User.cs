@@ -25,5 +25,5 @@ public partial class User
 
     public int Id { get; set; }
 
-    public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
+    public virtual ICollection<UserHasRole> UserHasRoles { get; } = new List<UserHasRole>();
 }
