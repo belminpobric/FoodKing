@@ -9,7 +9,7 @@ namespace app.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController : BaseController<User, UserSearchObject>
+    public class UserController : BaseCRUDController<User, UserSearchObject, UserInsertRequest, UserUpdateRequest>
     {
         private readonly IUserService _service;
         private readonly ILogger<UserController> _logger;
@@ -18,17 +18,6 @@ namespace app.Controllers
         {
             _logger = logger;
             _service = service;
-        }
-        [HttpPost]
-        public User Insert(UserInsertRequest request)
-        {
-            return _service.Insert(request);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<User> Update(int id, UserUpdateRequest request)
-        {
-            return await _service.Update(id, request);
         }
     }
 }

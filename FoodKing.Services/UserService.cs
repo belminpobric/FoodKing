@@ -13,26 +13,16 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public class UserService : BaseService<Model.User, Database.User, UserSearchObject>, IUserService
+    public class UserService : BaseCRUDService<Model.User, Database.User, UserSearchObject, UserInsertRequest, UserUpdateRequest>, IUserService
     {
         public UserService(FoodKingContext context, IMapper mapper) : base(context, mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-
-        public Model.User Insert(UserInsertRequest request)
+        public override async Task BeforeInsert(Database.User entity, UserInsertRequest insert)
         {
-            var entity = new Database.User();
-            _mapper.Map(request, entity);
-
-            entity.Password = ComputeHash(request.Password, new SHA256CryptoServiceProvider());
-
-            _context.Users.Add(entity);
-            _context.SaveChanges();
-
-            return _mapper.Map<Model.User>(entity);
-
+            entity.Password = ComputeHash(insert.Password, new SHA256CryptoServiceProvider());
         }
         public string ComputeHash(string input, HashAlgorithm algorithm)
         {
@@ -41,20 +31,6 @@ namespace FoodKing.Services
             Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
 
             return BitConverter.ToString(hashedBytes);
-        }
-
-        public async Task<Model.User> Update(int id, UserUpdateRequest request)
-        {
-            var result = await _context.Users.SingleOrDefaultAsync(b => b.Id == id);
-            var user = new Model.User();
-            if (result != null)
-            {
-                _mapper.Map(request, result);
-                await _context.SaveChangesAsync();
-
-                return _mapper.Map(result, user);
-            }
-            return await Task.FromResult(user);
         }
 
         public override IQueryable<Database.User> AddFilter(IQueryable<Database.User> query, UserSearchObject? search = null)

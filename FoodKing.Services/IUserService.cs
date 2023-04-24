@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public interface IUserService : IService<Model.User, UserSearchObject>
+    public interface IUserService : ICRUDService<Model.User, UserSearchObject, UserInsertRequest, UserUpdateRequest>
     {
-        Model.User Insert(UserInsertRequest request);
-        Task<Model.User> Update(int id, UserUpdateRequest request);
     }
 }
