@@ -11,5 +11,7 @@ public partial class Order
 
     public bool? IsAccepted { get; set; }
 
+    public string? StateMachine { get; set; }
+
     public virtual ICollection<OrderHasOrderDetail> OrderHasOrderDetails { get; } = new List<OrderHasOrderDetail>();
 }

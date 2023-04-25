@@ -1,0 +1,4 @@
+Update existing models:
+	 Scaffold-DbContext "Server=.; Database=food_king; User Id=sa; Password=test; TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Database -force
+Scaffold db first time :
+ 	Scaffold-DbContext "Server=.; Database=food_king; User Id=sa; Password=test; TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Database

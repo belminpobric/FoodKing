@@ -1,9 +1,4 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
@@ -19,6 +14,9 @@ namespace FoodKing.Services
             CreateMap<Model.Requests.CustomerInsertRequest, Database.Customer>();
             CreateMap<Model.Requests.CustomerUpdateRequest, Database.Customer>();
 
+            CreateMap<Database.Order, Model.Order>();
+            CreateMap<Model.Requests.OrderInsertRequest, Database.Order>();
+            CreateMap<Model.Requests.OrderUpdateRequest, Database.Order>();
             //CreateMap<Database.Proizvodi, Model.Proizvodi>();
 
             //CreateMap<Database.JediniceMjere, Model.JediniceMjere>();

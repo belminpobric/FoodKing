@@ -4,7 +4,6 @@ using FoodKing.Services;
 
 namespace app.Controllers
 {
-
     [Route("[controller]")]
     public class BaseController<T, TSearch> : ControllerBase where T : class where TSearch : class
     {

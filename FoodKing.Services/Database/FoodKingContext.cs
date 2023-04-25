@@ -95,6 +95,10 @@ public partial class FoodKingContext : DbContext
 
             entity.ToTable("MenuHasProduct");
 
+            entity.HasIndex(e => e.MenuId, "IX_MenuHasProduct_menuId");
+
+            entity.HasIndex(e => e.ProductId, "IX_MenuHasProduct_productId");
+
             entity.Property(e => e.MenuId).HasColumnName("menuId");
             entity.Property(e => e.ProductId).HasColumnName("productId");
 
@@ -117,6 +121,7 @@ public partial class FoodKingContext : DbContext
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(8, 2)")
                 .HasColumnName("price");
+            entity.Property(e => e.StateMachine).HasColumnName("stateMachine");
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>
@@ -124,6 +129,10 @@ public partial class FoodKingContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__OrderDet__3214EC079853F2FB");
 
             entity.ToTable("OrderDetail");
+
+            entity.HasIndex(e => e.CustomerId, "IX_OrderDetail_customerId");
+
+            entity.HasIndex(e => e.ProductId, "IX_OrderDetail_productId");
 
             entity.Property(e => e.CustomerId).HasColumnName("customerId");
             entity.Property(e => e.Details)
@@ -146,6 +155,10 @@ public partial class FoodKingContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__OrderHas__3214EC070C52C7AB");
 
             entity.ToTable("OrderHasOrderDetail");
+
+            entity.HasIndex(e => e.OrderDetailId, "IX_OrderHasOrderDetail_orderDetailId");
+
+            entity.HasIndex(e => e.OrderId, "IX_OrderHasOrderDetail_orderId");
 
             entity.Property(e => e.OrderDetailId).HasColumnName("orderDetailId");
             entity.Property(e => e.OrderId).HasColumnName("orderId");
@@ -246,6 +259,10 @@ public partial class FoodKingContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__UserHasR__3214EC07216D1EEB");
 
             entity.ToTable("UserHasRole");
+
+            entity.HasIndex(e => e.RoleId, "IX_UserHasRole_RoleId");
+
+            entity.HasIndex(e => e.UserId, "IX_UserHasRole_UserId");
 
             entity.HasOne(d => d.Role).WithMany(p => p.UserHasRoles)
                 .HasForeignKey(d => d.RoleId)
