@@ -18,5 +18,11 @@ namespace app.Controllers
             _logger = logger;
             _service = service;
         }
+
+        [HttpGet("{id}/allowedActions")]
+        public virtual async Task<List<string>> AllowedActions(int id)
+        {
+            return await _service.AllowedActions(id);
+        }
     }
 }

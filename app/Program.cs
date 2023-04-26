@@ -1,6 +1,7 @@
 using app.Filters;
 using FoodKing.Services;
 using FoodKing.Services.Database;
+using FoodKing.Services.OrderStateMachine;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,13 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 
+builder.Services.AddTransient<BaseState>();
+builder.Services.AddTransient<AcceptedOrderState>();
+builder.Services.AddTransient<CanceledOrderState>();
+builder.Services.AddTransient<DeliveredOrderState>();
+builder.Services.AddTransient<FinishedOrderState>();
+builder.Services.AddTransient<InitialOrderState>();
+builder.Services.AddTransient<InProgressOrderState>();
 
 builder.Services.AddControllers(x =>
 {
