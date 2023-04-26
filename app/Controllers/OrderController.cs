@@ -25,6 +25,30 @@ namespace app.Controllers
             return await _service.AllowedActions(id);
         }
 
+        [HttpPut("{id}/accept")]
+        public virtual async Task<Order> Accept(int id)
+        {
+            return await _service.Accept(id);
+        }
+
+        [HttpPut("{id}/inProgress")]
+        public virtual async Task<Order> inProgress(int id)
+        {
+            return await _service.InProgress(id);
+        }
+
+        [HttpPut("{id}/finish")]
+        public virtual async Task<Order> Finish(int id)
+        {
+            return await _service.Finish(id);
+        }
+
+        [HttpPut("{id}/deliver")]
+        public virtual async Task<Order> Deliver(int id)
+        {
+            return await _service.Deliver(id);
+        }
+
         [HttpPut("{id}/cancel")]
         public virtual async Task<Order> Cancel(int id)
         {

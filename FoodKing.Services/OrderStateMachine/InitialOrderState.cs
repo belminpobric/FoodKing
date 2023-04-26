@@ -41,11 +41,24 @@ namespace FoodKing.Services.OrderStateMachine
 
             return _mapper.Map<Model.Order>(entity);
         }
+        public override async Task<Model.Order> Accept(int id)
+        {
+            var entity = await _context.Orders.FindAsync(id);
+            if (entity == null)
+            {
+                throw new UserException($"Order {id} does not exist");
+            }
+            entity.StateMachine = "Accepted";
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<Model.Order>(entity);
+        }
         public override async Task<List<string>> AllowedActions()
         {
             var list = await base.AllowedActions();
 
             list.Add("Insert");
+            list.Add("Accept");
             list.Add("Cancel");
 
             return list;

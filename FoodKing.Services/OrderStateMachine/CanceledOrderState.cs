@@ -16,5 +16,13 @@ namespace FoodKing.Services.OrderStateMachine
         {
 
         }
+        public override async Task<List<string>> AllowedActions()
+        {
+            var list = await base.AllowedActions();
+
+            list.Add("None");
+
+            return list;
+        }
     }
 }

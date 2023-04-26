@@ -35,11 +35,55 @@ namespace FoodKing.Services
             var entity = await _context.Orders.FindAsync(id);
             if (entity == null)
             {
-                throw new UserException("Order does not exist");
+                throw new UserException($"Order {id} does not exist");
             }
             var state = _baseState.CreateState(entity.StateMachine);
 
             return await state.Cancel(id);
+        }
+        public async Task<Model.Order> Accept(int id)
+        {
+            var entity = await _context.Orders.FindAsync(id);
+            if (entity == null)
+            {
+                throw new UserException($"Order {id} does not exist");
+            }
+            var state = _baseState.CreateState(entity.StateMachine);
+
+            return await state.Accept(id);
+        }
+        public async Task<Model.Order> InProgress(int id)
+        {
+            var entity = await _context.Orders.FindAsync(id);
+            if (entity == null)
+            {
+                throw new UserException($"Order {id} does not exist");
+            }
+            var state = _baseState.CreateState(entity.StateMachine);
+
+            return await state.InProgress(id);
+        }
+        public async Task<Model.Order> Finish(int id)
+        {
+            var entity = await _context.Orders.FindAsync(id);
+            if (entity == null)
+            {
+                throw new UserException($"Order {id} does not exist");
+            }
+            var state = _baseState.CreateState(entity.StateMachine);
+
+            return await state.Finish(id);
+        }
+        public async Task<Model.Order> Deliver(int id)
+        {
+            var entity = await _context.Orders.FindAsync(id);
+            if (entity == null)
+            {
+                throw new UserException($"Order {id} does not exist");
+            }
+            var state = _baseState.CreateState(entity.StateMachine);
+
+            return await state.Deliver(id);
         }
     }
 }
