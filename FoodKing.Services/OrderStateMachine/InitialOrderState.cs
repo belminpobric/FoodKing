@@ -21,7 +21,7 @@ namespace FoodKing.Services.OrderStateMachine
 
             var entity = _mapper.Map<Database.Order>(request);
 
-            entity.StateMachine = "initiated";
+            entity.StateMachine = "Initial";
             set.Add(entity);
 
             await _context.SaveChangesAsync();

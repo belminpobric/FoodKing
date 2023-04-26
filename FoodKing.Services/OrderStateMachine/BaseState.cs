@@ -61,18 +61,18 @@ namespace FoodKing.Services.OrderStateMachine
         {
             switch (stateName)
             {
-                case "initial":
+                case "Initial":
                 case null:
                     return _serviceProvider.GetService<InitialOrderState>();
-                case "accepted":
+                case "Accepted":
                     return _serviceProvider.GetService<AcceptedOrderState>();
-                case "in_progress":
+                case "InProgress":
                     return _serviceProvider.GetService<InProgressOrderState>();
-                case "finished":
+                case "Finished":
                     return _serviceProvider.GetService<FinishedOrderState>();
-                case "delivered":
+                case "Delivered":
                     return _serviceProvider.GetService<DeliveredOrderState>();
-                case "canceled":
+                case "Canceled":
                     return _serviceProvider.GetService<CanceledOrderState>();
 
                 default:
