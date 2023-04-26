@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using FoodKing.Model;
 using FoodKing.Services.Database;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;

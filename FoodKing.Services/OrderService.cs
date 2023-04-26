@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FoodKing.Model;
 using FoodKing.Model.Requests;
 using FoodKing.Model.SearchObjects;
 using FoodKing.Services.Database;
@@ -27,6 +28,18 @@ namespace FoodKing.Services
             var entity = await _context.Orders.FindAsync(id);
             var state = _baseState.CreateState(entity?.StateMachine ?? "Initial");
             return await state.AllowedActions();
+        }
+
+        public async Task<Model.Order> Cancel(int id)
+        {
+            var entity = await _context.Orders.FindAsync(id);
+            if (entity == null)
+            {
+                throw new UserException("Order does not exist");
+            }
+            var state = _baseState.CreateState(entity.StateMachine);
+
+            return await state.Cancel(id);
         }
     }
 }

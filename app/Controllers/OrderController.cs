@@ -24,5 +24,11 @@ namespace app.Controllers
         {
             return await _service.AllowedActions(id);
         }
+
+        [HttpPut("{id}/cancel")]
+        public virtual async Task<Order> Cancel(int id)
+        {
+            return await _service.Cancel(id);
+        }
     }
 }

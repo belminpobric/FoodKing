@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FoodKing.Model;
 using FoodKing.Model.Requests;
 using FoodKing.Services.Database;
 using System;
@@ -28,11 +29,23 @@ namespace FoodKing.Services.OrderStateMachine
 
             return _mapper.Map<Model.Order>(entity);
         }
+        public override async Task<Model.Order> Cancel(int id)
+        {
+            var entity = await _context.Orders.FindAsync(id);
+            if (entity == null)
+            {
+                throw new UserException($"Order {id} does not exist");
+            }
+            entity.StateMachine = "Canceled";
+            await _context.SaveChangesAsync();
 
+            return _mapper.Map<Model.Order>(entity);
+        }
         public override async Task<List<string>> AllowedActions()
         {
             var list = await base.AllowedActions();
 
+            list.Add("Insert");
             list.Add("Cancel");
 
             return list;
