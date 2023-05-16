@@ -1,10 +1,12 @@
 ﻿using FoodKing.Model;
 using Microsoft.AspNetCore.Mvc;
 using FoodKing.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace app.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     public class BaseController<T, TSearch> : ControllerBase where T : class where TSearch : class
     {
         private readonly IService<T, TSearch> _service;

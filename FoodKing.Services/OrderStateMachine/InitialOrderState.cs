@@ -2,6 +2,7 @@
 using FoodKing.Model;
 using FoodKing.Model.Requests;
 using FoodKing.Services.Database;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,10 @@ namespace FoodKing.Services.OrderStateMachine
 {
     public class InitialOrderState : BaseState
     {
-        public InitialOrderState(IServiceProvider serviceProvider, IMapper mapper, FoodKingContext context) : base(serviceProvider, mapper, context)
+        protected ILogger<InitialOrderState> _logger;
+        public InitialOrderState(ILogger<InitialOrderState> logger, IServiceProvider serviceProvider, IMapper mapper, FoodKingContext context) : base(serviceProvider, mapper, context)
         {
-            
+            _logger = logger;
         }
         public override async Task<Model.Order> Insert(OrderInsertRequest request)
         {
@@ -48,6 +50,8 @@ namespace FoodKing.Services.OrderStateMachine
             {
                 throw new UserException($"Order {id} does not exist");
             }
+            _logger.LogInformation($"Order {id} is accepted.");
+
             entity.StateMachine = "Accepted";
             await _context.SaveChangesAsync();
 
@@ -57,7 +61,6 @@ namespace FoodKing.Services.OrderStateMachine
         {
             var list = await base.AllowedActions();
 
-            list.Add("Insert");
             list.Add("Accept");
             list.Add("Cancel");
 
