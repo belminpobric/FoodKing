@@ -23,6 +23,7 @@ namespace FoodKing.Model
         public string Address { get; set; } = null!;
 
         public string CurrentAddress { get; set; } = null!;
+        public virtual ICollection<UserHasRole> UserHasRoles { get; } = new List<UserHasRole>();
 
     }
 }

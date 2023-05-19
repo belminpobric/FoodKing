@@ -1,5 +1,6 @@
 ﻿using FoodKing.Model;
 using FoodKing.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace app.Controllers
@@ -16,6 +17,7 @@ namespace app.Controllers
         }
 
         [HttpPost()]
+        [Authorize(Roles = "Administrator")]
         public virtual async Task<T> Insert([FromBody] TInsert insert)
         {
             return await _service.Insert(insert);

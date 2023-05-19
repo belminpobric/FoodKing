@@ -4,6 +4,7 @@ using FoodKing.Model.Requests;
 using FoodKing.Model.SearchObjects;
 using FoodKing.Services.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,23 @@ namespace FoodKing.Services
             }
 
             return query;
+        }
+
+        public async Task<Model.User> Login(string username, string password)
+        {
+            var entity = await _context.Users.Include("UserHasRoles.Role").FirstOrDefaultAsync(x => x.UserName == username);
+
+            if (entity == null)
+            {
+                return null;
+            }
+            var hash = ComputeHash(password, new SHA256CryptoServiceProvider());
+
+            if (hash != entity.Password)
+            {
+                return null;
+            }
+            return _mapper.Map<Model.User>(entity);
         }
     }
 }
