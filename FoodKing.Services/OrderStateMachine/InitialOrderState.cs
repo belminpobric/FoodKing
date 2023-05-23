@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using EasyNetQ;
 using FoodKing.Model;
 using FoodKing.Model.Requests;
 using FoodKing.Services.Database;
 using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +57,31 @@ namespace FoodKing.Services.OrderStateMachine
             entity.StateMachine = "Accepted";
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<Model.Order>(entity);
+            //var factory = new ConnectionFactory { HostName = "localhost" };
+            //using var connection = factory.CreateConnection();
+            //using var channel = connection.CreateModel();
+
+            //channel.QueueDeclare(queue: "product_accepted",
+            //                     durable: false,
+            //                     exclusive: false,
+            //                     autoDelete: false,
+            //                     arguments: null);
+
+            //const string message = "Hello World!";
+            //var body = Encoding.UTF8.GetBytes(message);
+
+            //channel.BasicPublish(exchange: string.Empty,
+            //                     routingKey: "product_accepted",
+            //                     basicProperties: null,
+            //                     body: body);
+
+            var mappedEntity = _mapper.Map<Model.Order>(entity);
+
+            using var bus = RabbitHutch.CreateBus("host=localhost");
+    
+            bus.PubSub.Publish(mappedEntity);
+
+            return mappedEntity;
         }
         public override async Task<List<string>> AllowedActions()
         {

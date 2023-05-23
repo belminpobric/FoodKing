@@ -46,6 +46,10 @@ namespace FoodKing.Services
                 query = query.Where(x => x.LastName.StartsWith(search.LastName));
             }
 
+            if (search?.isRoleIncluded == true)
+            {
+                query = query.Include("UserHasRoles.Role");
+            }
             return query;
         }
 
