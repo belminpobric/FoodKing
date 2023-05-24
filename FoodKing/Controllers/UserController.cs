@@ -5,7 +5,7 @@ using FoodKing.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace app.Controllers
+namespace FoodKing.Controllers
 {
     [ApiController]
     [Route("[controller]")]

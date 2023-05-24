@@ -3,7 +3,7 @@ using FoodKing.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace app.Controllers
+namespace FoodKing.Controllers
 {
     public class BaseCRUDController<T, TSearch, TInsert, TUpdate> : BaseController<T, TSearch> where TSearch : class where T : class
     {

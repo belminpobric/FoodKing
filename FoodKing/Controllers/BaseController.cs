@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using FoodKing.Services;
 using Microsoft.AspNetCore.Authorization;
 
-namespace app.Controllers
+namespace FoodKing.Controllers
 {
     [Route("[controller]")]
     [Authorize]

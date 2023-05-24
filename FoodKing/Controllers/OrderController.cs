@@ -4,7 +4,7 @@ using FoodKing.Model.SearchObjects;
 using FoodKing.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace app.Controllers
+namespace FoodKing.Controllers
 {
     [ApiController]
     [Route("[controller]")]

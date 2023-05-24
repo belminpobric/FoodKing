@@ -3,13 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "app", "app.csproj", "{74EF08C8-2F5B-43AC-88EC-C35FD418630C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodKing", "FoodKing.csproj", "{74EF08C8-2F5B-43AC-88EC-C35FD418630C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodKing.Services", "..\FoodKing.Services\FoodKing.Services.csproj", "{9279CE95-A774-44FA-A822-7D926982E2C3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodKing.Model", "..\FoodKing.Model\FoodKing.Model.csproj", "{7FCBCC76-D8A1-415F-9971-20D963C88A0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodKing.Subscriber", "..\FoodKing.Subscriber\FoodKing.Subscriber.csproj", "{3F7DFB91-A341-4051-97AB-D63EAFDA7BF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodKing.Subscriber", "..\FoodKing.Subscriber\FoodKing.Subscriber.csproj", "{3F7DFB91-A341-4051-97AB-D63EAFDA7BF6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3961946A-EBBE-474D-850A-C10F6E1D6661}"
+	ProjectSection(SolutionItems) = preProject
+		..\Dockerfile = ..\Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
