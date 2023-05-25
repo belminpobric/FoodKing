@@ -1,6 +1,7 @@
 # FoodKing
 docker run -d -p 15672:15672 -p 5672:5672 --name rabbit-test-for-medium rabbitmq:3-management  
 docker build . -t foodking  
+docker run -p 7001:7003 foodking  
 
 docker pull mcr.microsoft.com/mssql/server:2022-latest  
 docker run --name sql_2022 -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Bb123456!" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest  
