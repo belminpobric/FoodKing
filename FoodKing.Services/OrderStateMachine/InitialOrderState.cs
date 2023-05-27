@@ -77,8 +77,13 @@ namespace FoodKing.Services.OrderStateMachine
 
             var mappedEntity = _mapper.Map<Model.Order>(entity);
 
-            using var bus = RabbitHutch.CreateBus("host=localhost");
-    
+            var rmqhost = Environment.GetEnvironmentVariable("RABBITMQ_HOST");
+            var rmquser = Environment.GetEnvironmentVariable("RABBITMQ_USER");
+            var rmqpass = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD");
+            var rmqport = Environment.GetEnvironmentVariable("RABBITMQ_PORT");
+
+            using var bus = RabbitHutch.CreateBus($"host={rmqhost};username={rmquser};password={rmqpass};port={rmqport}");
+
             bus.PubSub.Publish(mappedEntity);
 
             return mappedEntity;

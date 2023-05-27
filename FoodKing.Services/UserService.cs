@@ -23,15 +23,13 @@ namespace FoodKing.Services
         }
         public override async Task BeforeInsert(Database.User entity, UserInsertRequest insert)
         {
-            entity.Password = ComputeHash(insert.Password, new SHA256CryptoServiceProvider());
+            entity.Password = ComputeHash(insert.Password);
         }
-        public string ComputeHash(string input, HashAlgorithm algorithm)
+        public static string ComputeHash(string value)
         {
-            Byte[] inputBytes = Encoding.UTF8.GetBytes(input);
-
-            Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
-
-            return BitConverter.ToString(hashedBytes);
+            using var hash = SHA256.Create();
+            var byteArray = hash.ComputeHash(Encoding.UTF8.GetBytes(value));
+            return Convert.ToHexString(byteArray);
         }
 
         public override IQueryable<Database.User> AddFilter(IQueryable<Database.User> query, UserSearchObject? search = null)
@@ -61,7 +59,7 @@ namespace FoodKing.Services
             {
                 return null;
             }
-            var hash = ComputeHash(password, new SHA256CryptoServiceProvider());
+            var hash = ComputeHash(password);
 
             if (hash != entity.Password)
             {

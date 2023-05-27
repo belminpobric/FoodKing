@@ -1,4 +1,5 @@
 using FoodKing;
+using FoodKing.DbSeed;
 using FoodKing.Filters;
 using FoodKing.Services;
 using FoodKing.Services.Database;
@@ -54,6 +55,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<FoodKingContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddScoped<DbInitializer>();
+
 builder.Services.AddAutoMapper(typeof(IUserService));
 builder.Services.AddAuthentication("BasicAuthentication")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
@@ -65,6 +68,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    await app.UseItToSeedSqlServer();
 }
 
 app.UseHttpsRedirection();
@@ -79,6 +83,9 @@ using (var scope = app.Services.CreateScope())
     var dataContext = scope.ServiceProvider.GetRequiredService<FoodKingContext>();
 
     //dataContext.Database.EnsureCreated();
-    dataContext.Database.Migrate();
+
+    var conn = dataContext.Database.GetConnectionString();
+
+    //dataContext.Database.Migrate();
 }
 app.Run();

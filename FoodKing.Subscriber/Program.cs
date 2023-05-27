@@ -30,7 +30,7 @@ using RabbitMQ.Client.Events;
 Console.WriteLine("Provide subscription id :");
 var subscriptionId = Console.ReadLine();
 
-using (var bus = RabbitHutch.CreateBus("host=localhost"))
+using (var bus = RabbitHutch.CreateBus("host=rabbitmq3"))
 {
     bus.PubSub.Subscribe<Order>(subscriptionId, HandleTextMessage);
     Console.WriteLine("Listening for messages. Hit <return> to quit.");
