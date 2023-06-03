@@ -54,7 +54,7 @@ builder.Services.AddSwaggerGen(c =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<FoodKingContext>(options =>
     options.UseSqlServer(connectionString));
-
+    
 builder.Services.AddScoped<DbInitializer>();
 
 builder.Services.AddAutoMapper(typeof(IUserService));
