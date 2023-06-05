@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodking_admin/screens/product_list_screen.dart';
 
 void main() {
   runApp(const MyMaterialApp());
@@ -132,8 +133,8 @@ class LoginPage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(children: [
-                    Image.network(
-                      "https://noc.com.sg/wp-content/uploads/2021/11/Logo-R3-Drop-Shadow-01.png",
+                    Image.asset(
+                      "assets/images/logo.png",
                       height: 150,
                       width: 150,
                     ),
@@ -155,6 +156,11 @@ class LoginPage extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         print("Login proceed");
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ProductListScreen(),
+                          ),
+                        );
                       },
                       child: const Text("Login"),
                     )
