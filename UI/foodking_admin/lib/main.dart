@@ -119,7 +119,9 @@ class MyMaterialApp extends StatelessWidget {
 }
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+  TextEditingController _usernameController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -138,24 +140,29 @@ class LoginPage extends StatelessWidget {
                       height: 150,
                       width: 150,
                     ),
-                    const TextField(
+                    TextField(
                       decoration: InputDecoration(
                           labelText: "Username", prefixIcon: Icon(Icons.email)),
+                      controller: _usernameController,
                     ),
                     const SizedBox(
                       height: 8,
                     ),
-                    const TextField(
+                    TextField(
                       decoration: InputDecoration(
                           labelText: "Password",
                           prefixIcon: Icon(Icons.password)),
+                      controller: _passwordController,
                     ),
                     const SizedBox(
                       height: 16,
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        print("Login proceed");
+                        var username = _usernameController.text;
+                        var password = _passwordController.text;
+                        print("Login proceed $username $password");
+
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => const ProductListScreen(),

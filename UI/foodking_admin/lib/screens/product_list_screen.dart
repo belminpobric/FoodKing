@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foodking_admin/screens/product_details_screen.dart';
+import 'package:foodking_admin/widgets/master_screen.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
@@ -10,17 +12,23 @@ class ProductListScreen extends StatefulWidget {
 class _ProductListScreenState extends State<ProductListScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(children: [
-        Text("Product List"),
-        ElevatedButton(
-          onPressed: () {
-            print("Login proceed");
-            Navigator.of(context).pop();
-          },
-          child: const Text("Back"),
-        )
-      ]),
-    );
+    return MasterScreenWidget(
+        Container(
+          child: Column(children: [
+            Text("Product List"),
+            ElevatedButton(
+              onPressed: () {
+                print("Login proceed");
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const ProductDetailsScreen(),
+                  ),
+                );
+              },
+              child: const Text("Details"),
+            )
+          ]),
+        ),
+        appBarTitle: "Product list screen");
   }
 }
