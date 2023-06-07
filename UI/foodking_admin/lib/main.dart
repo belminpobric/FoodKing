@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:foodking_admin/providers/OrderProvider.dart';
 import 'package:foodking_admin/screens/order_list_screen.dart';
+import 'package:foodking_admin/utils/util.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyMaterialApp());
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => OrderProvider())],
+    child: const MyMaterialApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -122,9 +128,11 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key});
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
+  late OrderProvider _orderProvider;
 
   @override
   Widget build(BuildContext context) {
+    _orderProvider = context.read<OrderProvider>();
     return Scaffold(
         appBar: AppBar(title: const Text("Login")),
         body: Center(
@@ -158,16 +166,33 @@ class LoginPage extends StatelessWidget {
                       height: 16,
                     ),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         var username = _usernameController.text;
                         var password = _passwordController.text;
-                        print("Login proceed $username $password");
 
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const OrderListScreen(),
-                          ),
-                        );
+                        Authorization.username = username;
+                        Authorization.password = password;
+                        try {
+                          await _orderProvider.get();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const OrderListScreen(),
+                            ),
+                          );
+                        } on Exception catch (e) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(e.toString()),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text("OK"))
+                                    ],
+                                  ));
+                        }
                       },
                       child: const Text("Login"),
                     )

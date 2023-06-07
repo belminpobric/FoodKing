@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:foodking_admin/providers/OrderProvider.dart';
 import 'package:foodking_admin/screens/order_details_screen.dart';
 import 'package:foodking_admin/widgets/master_screen.dart';
+import 'package:provider/provider.dart';
 
 class OrderListScreen extends StatefulWidget {
   const OrderListScreen({super.key});
@@ -10,6 +12,15 @@ class OrderListScreen extends StatefulWidget {
 }
 
 class _OrderListScreenState extends State<OrderListScreen> {
+  late OrderProvider _orderProvider;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _orderProvider = context.read<OrderProvider>();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
@@ -17,13 +28,8 @@ class _OrderListScreenState extends State<OrderListScreen> {
           child: Column(children: [
             Text("Order List"),
             ElevatedButton(
-              onPressed: () {
-                print("Login proceed");
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const OrderDetailsScreen(),
-                  ),
-                );
+              onPressed: () async {
+                var data = await _orderProvider.get();
               },
               child: const Text("Details"),
             )

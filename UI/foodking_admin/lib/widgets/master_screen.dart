@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodking_admin/main.dart';
 
 import '../screens/order_details_screen.dart';
 import '../screens/order_list_screen.dart';
@@ -23,7 +24,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               ListTile(
                 title: Text('Back'),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ),
+                  );
                 },
               ),
               ListTile(
