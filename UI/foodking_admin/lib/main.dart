@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foodking_admin/screens/product_list_screen.dart';
+import 'package:foodking_admin/screens/order_list_screen.dart';
 
 void main() {
   runApp(const MyMaterialApp());
@@ -165,7 +165,7 @@ class LoginPage extends StatelessWidget {
 
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const ProductListScreen(),
+                            builder: (context) => const OrderListScreen(),
                           ),
                         );
                       },
