@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public interface ICRUDService<T, TSearch, TInsert, TUpdate> : IService<T, TSearch> where TSearch : class
+    public interface ICRUDService<TModel, TSearch, TInsert, TUpdate> : IService<TModel, TSearch> where TSearch : class
     {
-        Task<T> Insert(TInsert obj);
-        Task<T> Update(int id, TUpdate obj);
+        Task<TModel> Insert(TInsert obj);
+        Task<TModel> Update(int id, TUpdate obj);
     }
 }
