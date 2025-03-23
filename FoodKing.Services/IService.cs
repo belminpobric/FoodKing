@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public interface IService<T, TSearch> where TSearch : class
+    public interface IService<TModel, TSearch> where TSearch : class
     {
-        Task<PagedResult<T>> Get(TSearch search = null);
-        Task<T> GetByID(int id);
+        Task<PagedResult<TModel>> Get(TSearch search = null);
+        Task<TModel> GetByID(int id);
     }
 }

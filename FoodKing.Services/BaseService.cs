@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FoodKing.Services
 {
-    public class BaseService<T, TDb, TSearch> : IService<T, TSearch> where T : class where TDb : class where TSearch : BaseSearchObject
+    public class BaseService<TModel, TDb, TSearch> : IService<TModel, TSearch> where TModel : class where TDb : class where TSearch : BaseSearchObject
     {
         protected FoodKingContext _context;
         protected IMapper _mapper { get; set; }
@@ -22,11 +22,11 @@ namespace FoodKing.Services
             _mapper = mapper;
         }
 
-        public virtual async Task<PagedResult<T>> Get(TSearch? search = null)
+        public virtual async Task<PagedResult<TModel>> Get(TSearch? search = null)
         {
             var query = _context.Set<TDb>().AsQueryable();
 
-            PagedResult<T> result = new PagedResult<T>();
+            PagedResult<TModel> result = new PagedResult<TModel>();
 
             query = AddFilter(query, search);
 
@@ -36,15 +36,18 @@ namespace FoodKing.Services
             {
                 query = query.Take(search.PageSize.Value).Skip(search.Page.Value * search.PageSize.Value);  
             }
-            result.Result = _mapper.Map<List<T>>(await query.ToListAsync());
+            result.Result = _mapper.Map<List<TModel>>(await query.ToListAsync());
             return result;
         }
 
-        public virtual async Task<T> GetByID(int id)
+        public virtual async Task<TModel> GetByID(int id)
         {
             var entity = await _context.Set<TDb>().FindAsync(id);
-
-            return _mapper.Map<T>(entity);
+            if (entity  == null)
+            {
+                return null;
+            }
+            return _mapper.Map<TModel>(entity);
         }
 
         public virtual IQueryable<TDb> AddFilter(IQueryable<TDb> query, TSearch? search = null)
