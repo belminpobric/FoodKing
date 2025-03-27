@@ -26,74 +26,19 @@ namespace FoodKing.Services.OrderStateMachine
 
             var entity = _mapper.Map<Database.Order>(request);
 
-            entity.StateMachine = "Initial";
+            entity.StateMachine = "Draft";
             set.Add(entity);
 
             await _context.SaveChangesAsync();
 
             return _mapper.Map<Model.Order>(entity);
         }
-        public override async Task<Model.Order> Cancel(int id)
-        {
-            var entity = await _context.Orders.FindAsync(id);
-            if (entity == null)
-            {
-                throw new UserException($"Order {id} does not exist");
-            }
-            entity.StateMachine = "Canceled";
-            await _context.SaveChangesAsync();
-
-            return _mapper.Map<Model.Order>(entity);
-        }
-        public override async Task<Model.Order> Accept(int id)
-        {
-            var entity = await _context.Orders.FindAsync(id);
-            if (entity == null)
-            {
-                throw new UserException($"Order {id} does not exist");
-            }
-            _logger.LogInformation($"Order {id} is accepted.");
-
-            entity.StateMachine = "Accepted";
-            await _context.SaveChangesAsync();
-
-            //var factory = new ConnectionFactory { HostName = "localhost" };
-            //using var connection = factory.CreateConnection();
-            //using var channel = connection.CreateModel();
-
-            //channel.QueueDeclare(queue: "product_accepted",
-            //                     durable: false,
-            //                     exclusive: false,
-            //                     autoDelete: false,
-            //                     arguments: null);
-
-            //const string message = "Hello World!";
-            //var body = Encoding.UTF8.GetBytes(message);
-
-            //channel.BasicPublish(exchange: string.Empty,
-            //                     routingKey: "product_accepted",
-            //                     basicProperties: null,
-            //                     body: body);
-
-            var mappedEntity = _mapper.Map<Model.Order>(entity);
-
-            var rmqhost = Environment.GetEnvironmentVariable("RABBITMQ_HOST");
-            var rmquser = Environment.GetEnvironmentVariable("RABBITMQ_USER");
-            var rmqpass = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD");
-            var rmqport = Environment.GetEnvironmentVariable("RABBITMQ_PORT");
-
-            using var bus = RabbitHutch.CreateBus($"host={rmqhost};username={rmquser};password={rmqpass};port={rmqport}");
-
-            bus.PubSub.Publish(mappedEntity);
-
-            return mappedEntity;
-        }
+       
         public override async Task<List<string>> AllowedActions()
         {
             var list = await base.AllowedActions();
 
-            list.Add("Accept");
-            list.Add("Cancel");
+            list.Add("Insert");
 
             return list;
         }

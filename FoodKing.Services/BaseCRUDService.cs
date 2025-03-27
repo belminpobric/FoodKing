@@ -35,13 +35,21 @@ namespace FoodKing.Services
             return _mapper.Map<T>(entity);
 
         }
+        public virtual async Task BeforeUpdate(TDb entity, TUpdate update)
+        {
+
+        }
         public virtual async Task<T> Update(int id, TUpdate update)
         {
             var set = _context.Set<TDb>();
             var entity = await set.FindAsync(id);
-
+            if (entity == null)
+            {
+                throw new Exception("Entity does not exist.");
+            }
             _mapper.Map(update, entity);
-            
+            await BeforeUpdate(entity, update);
+
             await _context.SaveChangesAsync();
             return _mapper.Map<T>(entity);
         }

@@ -18,11 +18,22 @@ namespace FoodKing.Controllers
             _logger = logger;
             _service = service;
         }
-
+        //to do - order insert, update action
         [HttpGet("{id}/allowedActions")]
         public virtual async Task<List<string>> AllowedActions(int id)
         {
             return await _service.AllowedActions(id);
+        }
+        [HttpPost]
+        public override async Task<Order> Insert(OrderInsertRequest request)
+        {
+            return await _service.Insert(request);
+        }
+
+        [HttpPut("{id}")]
+        public override async Task<Order> Update(int id, OrderUpdateRequest request)
+        {
+            return await _service.Update(id, request);
         }
 
         [HttpPut("{id}/accept")]

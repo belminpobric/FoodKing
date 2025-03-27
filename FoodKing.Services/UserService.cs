@@ -24,6 +24,7 @@ namespace FoodKing.Services
         public override async Task BeforeInsert(Database.User entity, UserInsertRequest insert)
         {
             entity.Password = ComputeHash(insert.Password);
+            await base.BeforeInsert(entity, insert);
         }
         public static string ComputeHash(string value)
         {
