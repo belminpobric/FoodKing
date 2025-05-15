@@ -3,6 +3,7 @@ using EasyNetQ;
 using FoodKing.Model;
 using FoodKing.Model.Requests;
 using FoodKing.Services.Database;
+using FoodKing.Services.Messages;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using System;
@@ -84,7 +85,8 @@ namespace FoodKing.Services.OrderStateMachine
 
             using var bus = RabbitHutch.CreateBus($"host={rmqhost};username={rmquser};password={rmqpass};port={rmqport}");
 
-            bus.PubSub.Publish(mappedEntity);
+            OrderAccepted message = new OrderAccepted { Order = mappedEntity };
+            bus.PubSub.Publish(message);
 
             return mappedEntity;
         }

@@ -39,4 +39,5 @@ using (var bus = RabbitHutch.CreateBus("host=rabbitmq3"))
 static void HandleTextMessage(Order entity)
 {
     Console.WriteLine($"Received: {entity.Id}, {entity.Price}");
+    //moze se poslati notifikacija aplikaciji da je primljena narudzba ili mail korisniku ili spasiti u bazu ali nesto da se uradi sa ovom info.
 }
