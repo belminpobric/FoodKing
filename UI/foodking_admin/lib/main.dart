@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodking_admin/providers/OrderProvider.dart';
-import 'package:foodking_admin/screens/order_list_screen.dart';
-import 'package:foodking_admin/utils/util.dart';
+import 'package:foodking_admin/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -38,7 +37,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: LayoutExamples());
+        home: const LayoutExamples());
   }
 }
 
@@ -73,7 +72,8 @@ class _CounterState extends State<Counter> {
     return Column(
       children: [
         Text("You have pushed button $count times"),
-        ElevatedButton(onPressed: incrementCounter, child: Text("Incremend++"))
+        ElevatedButton(
+            onPressed: incrementCounter, child: const Text("Incremend++"))
       ],
     );
   }
@@ -97,15 +97,15 @@ class LayoutExamples extends StatelessWidget {
             child: const Text("Example text"),
           )),
         ),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [Text("Item 1"), Text("Item 2"), Text("Item 3")],
         ),
         Container(
           height: 150,
           color: Colors.red,
-          child: Text("Container"),
           alignment: Alignment.center,
+          child: Text("Container"),
         )
       ],
     );
@@ -120,85 +120,6 @@ class MyMaterialApp extends StatelessWidget {
     return MaterialApp(
         title: "FoodKing Material App",
         theme: ThemeData(primarySwatch: Colors.deepOrange),
-        home: LoginPage());
-  }
-}
-
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
-  TextEditingController _usernameController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
-  late OrderProvider _orderProvider;
-
-  @override
-  Widget build(BuildContext context) {
-    _orderProvider = context.read<OrderProvider>();
-    return Scaffold(
-        appBar: AppBar(title: const Text("Login")),
-        body: Center(
-          child: Container(
-              width: 400,
-              constraints: const BoxConstraints(maxWidth: 400, maxHeight: 400),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(children: [
-                    Image.asset(
-                      "assets/images/logo.png",
-                      height: 150,
-                      width: 150,
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          labelText: "Username", prefixIcon: Icon(Icons.email)),
-                      controller: _usernameController,
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          labelText: "Password",
-                          prefixIcon: Icon(Icons.password)),
-                      controller: _passwordController,
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        var username = _usernameController.text;
-                        var password = _passwordController.text;
-
-                        Authorization.username = username;
-                        Authorization.password = password;
-                        try {
-                          await _orderProvider.get();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const OrderListScreen(),
-                            ),
-                          );
-                        } on Exception catch (e) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("OK"))
-                                    ],
-                                  ));
-                        }
-                      },
-                      child: const Text("Login"),
-                    )
-                  ]),
-                ),
-              )),
-        ));
+        home: const LoginPage());
   }
 }

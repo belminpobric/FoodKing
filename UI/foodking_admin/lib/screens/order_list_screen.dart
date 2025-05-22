@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:foodking_admin/providers/OrderProvider.dart';
-import 'package:foodking_admin/screens/order_details_screen.dart';
 import 'package:foodking_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -24,17 +23,15 @@ class _OrderListScreenState extends State<OrderListScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        Container(
-          child: Column(children: [
-            Text("Order List"),
-            ElevatedButton(
-              onPressed: () async {
-                var data = await _orderProvider.get();
-              },
-              child: const Text("Details"),
-            )
-          ]),
-        ),
+        Column(children: [
+          const Text("Order List"),
+          ElevatedButton(
+            onPressed: () async {
+              var data = await _orderProvider.get();
+            },
+            child: const Text("Details"),
+          )
+        ]),
         appBarTitle: "Order list screen");
   }
 }

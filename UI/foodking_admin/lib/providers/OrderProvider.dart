@@ -6,7 +6,7 @@ import 'package:http/http.dart';
 
 class OrderProvider with ChangeNotifier {
   static String? _baseUrl;
-  String _endpoint = "Order";
+  final String _endpoint = "Order";
 
   OrderProvider() {
     _baseUrl = const String.fromEnvironment("baseUrl",
@@ -26,7 +26,7 @@ class OrderProvider with ChangeNotifier {
 
       return data;
     } else {
-      throw new Exception("Unknown error");
+      throw Exception("Unknown error");
     }
   }
 
@@ -34,9 +34,9 @@ class OrderProvider with ChangeNotifier {
     if (response.statusCode < 299) {
       return true;
     } else if (response.statusCode == 401) {
-      throw new Exception("Unauthorized");
+      throw Exception("Unauthorized");
     } else {
-      throw new Exception("Something bad happened please try again");
+      throw Exception("Something bad happened please try again");
     }
   }
 

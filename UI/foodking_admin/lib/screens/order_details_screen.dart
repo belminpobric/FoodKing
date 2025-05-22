@@ -12,7 +12,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      Text("Details"),
+      const Text("Details"),
       appBarTitle: "Order Details Screen",
     );
   }
