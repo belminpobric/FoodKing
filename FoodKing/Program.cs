@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IMenuService, MenuService>();
 
 builder.Services.AddTransient<BaseState>();
 builder.Services.AddTransient<AcceptedOrderState>();
@@ -82,7 +83,7 @@ using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<FoodKingContext>();
 
-    //dataContext.Database.EnsureCreated();
+    dataContext.Database.EnsureCreated();
 
     var conn = dataContext.Database.GetConnectionString();
 
