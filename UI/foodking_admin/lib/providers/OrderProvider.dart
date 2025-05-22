@@ -10,7 +10,7 @@ class OrderProvider with ChangeNotifier {
 
   OrderProvider() {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://localhost:7003/");
+        defaultValue: "http://localhost:5000/");
   }
 
   Future<dynamic> get() async {
@@ -50,9 +50,11 @@ class OrderProvider with ChangeNotifier {
 
     var headers = {
       "Content-Type": "application/json",
-      "Authorization": basicAuth
+      "Accept": "text/plain",
+      "Authorization": basicAuth,
     };
 
+    print("HEADERS → $headers");
     return headers;
   }
 }

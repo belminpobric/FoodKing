@@ -80,6 +80,9 @@ class _LoginPageState extends State<LoginPage> {
 
     Authorization.username = username;
     Authorization.password = password;
+    print('Set Authorization: $username, $password');
+
+    print('Username: $username, Password: $password');
 
     try {
       await _orderProvider.get();
