@@ -10,20 +10,35 @@ class OrderProvider with ChangeNotifier {
 
   OrderProvider() {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://localhost:5000/");
+        defaultValue: "http://localhost:7003/");
   }
 
-  Future<dynamic> get() async {
+  Future<dynamic> get({bool? isAccepted, int? idGTE}) async {
     var url = "$_baseUrl$_endpoint";
+    var queryParams = <String, String>{};
 
+    if (isAccepted != null) {
+      queryParams['IsAccepted'] = isAccepted.toString().toLowerCase();
+    }
+
+    if (idGTE != null) {
+      queryParams['IdGTE'] = idGTE.toString();
+    }
+
+    if (queryParams.isNotEmpty) {
+      url += "?${Uri(queryParameters: queryParams).query}";
+    }
+
+    print("Request URL: $url"); // Debug print
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
     var response = await http.get(uri, headers: headers);
+    print("Response status: ${response.statusCode}"); // Debug print
+    print("Response body: ${response.body}"); // Debug print
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
-
       return data;
     } else {
       throw Exception("Unknown error");

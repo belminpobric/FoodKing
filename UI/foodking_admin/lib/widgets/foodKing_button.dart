@@ -1,44 +1,48 @@
 import 'package:flutter/material.dart';
 
 class FoodKingButton extends StatelessWidget {
-  final Color buttonColor;
   final String text;
-  final IconData? icon;
-  final Color textColor;
   final VoidCallback? onPressed;
+  final Color buttonColor;
+  final Color textColor;
+  final double width;
+  final IconData? icon;
 
   const FoodKingButton({
     super.key,
-    required this.buttonColor,
     required this.text,
-    this.icon,
-    required this.textColor,
     required this.onPressed,
+    required this.buttonColor,
+    required this.textColor,
+    this.width = 120,
+    this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: buttonColor,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
-      ),
-      onPressed: onPressed,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null) ...[
-            Icon(icon, color: textColor),
-            const SizedBox(width: 8),
-          ],
-          Text(
-            text,
-            style: TextStyle(color: textColor),
+    return SizedBox(
+      width: width,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: buttonColor,
+          foregroundColor: textColor,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
           ),
-        ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, color: textColor),
+              const SizedBox(width: 8),
+            ],
+            Text(text),
+          ],
+        ),
       ),
     );
   }

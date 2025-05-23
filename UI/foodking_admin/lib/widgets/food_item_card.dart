@@ -80,11 +80,11 @@ class FoodItemCard extends StatelessWidget {
                 const SizedBox(width: 16),
                 CircleAvatar(
                   backgroundColor: Colors.orange.shade200,
+                  radius: 20,
                   child: IconButton(
                     icon: Icon(icon, color: Colors.deepOrange),
                     onPressed: onIconPressed,
                   ),
-                  radius: 20,
                 ),
               ],
             ],

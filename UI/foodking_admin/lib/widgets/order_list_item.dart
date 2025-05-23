@@ -7,6 +7,7 @@ class OrderListItem extends StatelessWidget {
   final bool accepted;
   final VoidCallback? onAccept;
   final VoidCallback? onReject;
+  final double buttonWidth;
 
   const OrderListItem({
     super.key,
@@ -15,6 +16,7 @@ class OrderListItem extends StatelessWidget {
     this.accepted = true,
     this.onAccept,
     this.onReject,
+    this.buttonWidth = 120,
   });
 
   @override
@@ -56,6 +58,7 @@ class OrderListItem extends StatelessWidget {
               text: "Da",
               textColor: Colors.white,
               onPressed: onAccept,
+              width: buttonWidth,
             ),
             const SizedBox(width: 8),
             FoodKingButton(
@@ -63,6 +66,7 @@ class OrderListItem extends StatelessWidget {
               text: "Ne",
               textColor: Colors.white,
               onPressed: onReject,
+              width: buttonWidth,
             ),
             const SizedBox(width: 8),
           ],
@@ -73,6 +77,7 @@ class OrderListItem extends StatelessWidget {
               text: "Detalji",
               textColor: Colors.white,
               onPressed: onDetailsPressed,
+              width: buttonWidth,
             ),
           ),
         ],

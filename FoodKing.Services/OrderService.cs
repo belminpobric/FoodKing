@@ -4,6 +4,7 @@ using FoodKing.Model.Requests;
 using FoodKing.Model.SearchObjects;
 using FoodKing.Services.Database;
 using FoodKing.Services.OrderStateMachine;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodKing.Services
 {
@@ -17,6 +18,22 @@ namespace FoodKing.Services
             _mapper = mapper;
             _baseState = baseState;
         }
+
+        public override IQueryable<Database.Order> AddFilter(IQueryable<Database.Order> query, OrderSearchObject? search = null)
+        {
+            var filteredQuery = base.AddFilter(query,search);
+            if (search.IsAccepted.HasValue)
+            {
+                filteredQuery = query.Where(x => x.IsAccepted == search.IsAccepted);
+            }
+
+            if (!string.IsNullOrWhiteSpace(search?.IdGTE) && search.IdGTE.All(char.IsDigit))
+            {
+                filteredQuery = filteredQuery.Where(x => x.Id.ToString().StartsWith(search.IdGTE));
+            }
+            return filteredQuery;
+        }
+
         public override Task<Model.Order> Insert(OrderInsertRequest insert)
         {
             var state = _baseState.CreateState("Initial");

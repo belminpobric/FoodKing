@@ -1,15 +1,6 @@
 ﻿using AutoMapper;
 using FoodKing.Model.SearchObjects;
-using FoodKing.Model;
 using FoodKing.Services.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FoodKing.Model.Requests;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace FoodKing.Services
 {
@@ -54,5 +45,4 @@ namespace FoodKing.Services
             return _mapper.Map<T>(entity);
         }
     }
-
 }

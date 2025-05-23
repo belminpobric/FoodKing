@@ -13,6 +13,9 @@ namespace FoodKing.Model.SearchObjects
 
         public bool? IsAccepted { get; set; }
 
+        //GTE = Greater Than or Equal
+        public string? IdGTE { get; set; }
+
         public string? StateMachine { get; set; }
 
     }

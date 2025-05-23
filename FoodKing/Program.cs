@@ -10,7 +10,17 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add CORS policy (for development; lock down in production)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()    // or .WithOrigins("http://localhost:8080")
+            .AllowAnyMethod()    // GET, POST, PUT, DELETE, OPTIONS...
+            .AllowAnyHeader();   // Content-Type, Authorization...
+    });
+});
 
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
@@ -25,29 +35,30 @@ builder.Services.AddTransient<FinishedOrderState>();
 builder.Services.AddTransient<InitialOrderState>();
 builder.Services.AddTransient<InProgressOrderState>();
 
-
+// Add controllers with global filters
 builder.Services.AddControllers(x =>
 {
     x.Filters.Add<ErrorFilter>();
 });
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Swagger/OpenAPI configuration
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.AddSecurityDefinition("basicAuth", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+    c.AddSecurityDefinition("basicAuth", new OpenApiSecurityScheme
     {
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Type = SecuritySchemeType.Http,
         Scheme = "basic"
     });
 
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement()
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference{Type = ReferenceType.SecurityScheme, Id = "basicAuth" }
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "basicAuth" }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
@@ -55,16 +66,18 @@ builder.Services.AddSwaggerGen(c =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<FoodKingContext>(options =>
     options.UseSqlServer(connectionString));
-    
+
 builder.Services.AddScoped<DbInitializer>();
 
 builder.Services.AddAutoMapper(typeof(IUserService));
+
 builder.Services.AddAuthentication("BasicAuthentication")
-    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>(
+        "BasicAuthentication", null);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Development-only middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -73,7 +86,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -82,11 +95,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<FoodKingContext>();
-
     dataContext.Database.EnsureCreated();
-
-    var conn = dataContext.Database.GetConnectionString();
-
-    //dataContext.Database.Migrate();
 }
+
 app.Run();
