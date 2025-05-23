@@ -6,6 +6,7 @@ class FoodKingTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool isPassword;
   final String? Function(String?)? validator;
+  final Widget? suffixIcon;
 
   const FoodKingTextField({
     super.key,
@@ -14,6 +15,7 @@ class FoodKingTextField extends StatelessWidget {
     required this.controller,
     this.isPassword = false,
     this.validator,
+    this.suffixIcon,
   });
 
   @override
@@ -24,6 +26,7 @@ class FoodKingTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+        suffixIcon: suffixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
         ),

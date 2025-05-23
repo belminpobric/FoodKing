@@ -17,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late OrderProvider _orderProvider;
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,17 @@ class _LoginPageState extends State<LoginPage> {
                       labelText: "Password",
                       prefixIcon: Icons.password,
                       controller: _passwordController,
-                      isPassword: true,
+                      isPassword: _obscurePassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(_obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
                     ),
                     const SizedBox(
                       height: 16,

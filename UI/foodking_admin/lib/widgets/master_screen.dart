@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodking_admin/screens/login_screen.dart';
-import '../screens/order_details_screen.dart';
 import '../screens/order_list_screen.dart';
+import '../screens/customer_list_screen.dart';
 
 class MasterScreenWidget extends StatefulWidget {
   Widget? child;
@@ -21,17 +21,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
           child: ListView(
             children: [
               ListTile(
-                title: const Text('Back'),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('Orders'),
+                title: const Text('Home'),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -41,15 +31,15 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 },
               ),
               ListTile(
-                title: const Text('Details'),
+                title: const Text('Customers'),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const OrderDetailsScreen(),
+                      builder: (context) => const CustomerListScreen(),
                     ),
                   );
                 },
-              )
+              ),
             ],
           ),
         ),

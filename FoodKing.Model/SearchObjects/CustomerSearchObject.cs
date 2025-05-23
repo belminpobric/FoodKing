@@ -12,5 +12,8 @@ namespace FoodKing.Model.SearchObjects
         public string? LastName { get; set; }
         public string? Email { get; set; }
 
+        //GTE = Greater Than or Equal
+        public string? NameGTE { get; set; }
+
     }
 }

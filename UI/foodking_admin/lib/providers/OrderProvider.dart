@@ -3,19 +3,13 @@ import 'package:foodking_admin/utils/util.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:foodking_admin/providers/base_provider.dart';
 
-class OrderProvider with ChangeNotifier {
-  static String? _baseUrl;
-  final String _endpoint = "Order";
+class OrderProvider extends BaseProvider {
+  OrderProvider() : super("Order");
 
-  OrderProvider() {
-    _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://localhost:7003/");
-  }
-
-  Future<dynamic> get({bool? isAccepted, int? idGTE}) async {
-    var url = "$_baseUrl$_endpoint";
-    var queryParams = <String, String>{};
+  Future<dynamic> getOrders({bool? isAccepted, int? idGTE}) async {
+    final queryParams = <String, dynamic>{};
 
     if (isAccepted != null) {
       queryParams['IsAccepted'] = isAccepted.toString().toLowerCase();
@@ -25,24 +19,7 @@ class OrderProvider with ChangeNotifier {
       queryParams['IdGTE'] = idGTE.toString();
     }
 
-    if (queryParams.isNotEmpty) {
-      url += "?${Uri(queryParameters: queryParams).query}";
-    }
-
-    print("Request URL: $url"); // Debug print
-    var uri = Uri.parse(url);
-    var headers = createHeaders();
-
-    var response = await http.get(uri, headers: headers);
-    print("Response status: ${response.statusCode}"); // Debug print
-    print("Response body: ${response.body}"); // Debug print
-
-    if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
-      return data;
-    } else {
-      throw Exception("Unknown error");
-    }
+    return super.get(queryParams: queryParams);
   }
 
   bool isValidResponse(Response response) {

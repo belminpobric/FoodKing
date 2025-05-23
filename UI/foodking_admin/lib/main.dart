@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:foodking_admin/providers/OrderProvider.dart';
+import 'package:foodking_admin/providers/CustomerProvider.dart';
 import 'package:foodking_admin/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => OrderProvider())],
+    providers: [
+      ChangeNotifierProvider(create: (_) => OrderProvider()),
+      ChangeNotifierProvider(create: (_) => CustomerProvider()),
+    ],
     child: const MyMaterialApp(),
   ));
 }

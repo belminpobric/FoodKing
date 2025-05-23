@@ -2,6 +2,7 @@
 using FoodKing.Model.Requests;
 using FoodKing.Model.SearchObjects;
 using FoodKing.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodKing.Services
 {
@@ -14,22 +15,33 @@ namespace FoodKing.Services
         }
         public override IQueryable<Database.Customer> AddFilter(IQueryable<Database.Customer> query, CustomerSearchObject? search = null)
         {
+            var filteredQuery = base.AddFilter(query, search);
+
             if (!string.IsNullOrWhiteSpace(search?.FirstName))
             {
-                query = query.Where(x => x.FirstName.StartsWith(search.FirstName));
+                filteredQuery = query.Where(x => x.FirstName.StartsWith(search.FirstName));
             }
 
             if (!string.IsNullOrWhiteSpace(search?.LastName))
             {
-                query = query.Where(x => x.LastName.StartsWith(search.LastName));
+                filteredQuery = query.Where(x => x.LastName.StartsWith(search.LastName));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search?.NameGTE))
+            {
+                var nameGte = search.NameGTE!;
+                filteredQuery = filteredQuery.Where(x =>
+                    EF.Functions.Like(x.FirstName, nameGte + "%") ||
+                    EF.Functions.Like(x.LastName, nameGte + "%")
+                );
             }
 
             if (!string.IsNullOrWhiteSpace(search?.Email))
             {
-                query = query.Where(x => x.Email.StartsWith(search.Email));
+                filteredQuery = query.Where(x => x.Email.StartsWith(search.Email));
             }
 
-            return query;
+            return filteredQuery;
         }
     }
 }

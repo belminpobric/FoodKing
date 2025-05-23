@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:foodking_admin/providers/OrderProvider.dart';
+import 'package:foodking_admin/providers/CustomerProvider.dart';
 import 'package:foodking_admin/widgets/master_screen.dart';
-import 'package:foodking_admin/widgets/order_list_item.dart';
+import 'package:foodking_admin/widgets/korisnici_list_item.dart';
 import 'package:foodking_admin/widgets/foodKing_text_field.dart';
-import 'package:foodking_admin/models/order.dart';
 import 'package:provider/provider.dart';
+import 'package:foodking_admin/models/customer.dart';
 
-class OrderListScreen extends StatefulWidget {
-  const OrderListScreen({super.key});
+class CustomerListScreen extends StatefulWidget {
+  const CustomerListScreen({super.key});
 
   @override
-  State<OrderListScreen> createState() => _OrderListScreenState();
+  State<CustomerListScreen> createState() => _CustomerListScreenState();
 }
 
-class _OrderListScreenState extends State<OrderListScreen> {
-  late OrderProvider _orderProvider;
-  List<Order> _orders = [];
+class _CustomerListScreenState extends State<CustomerListScreen> {
+  late CustomerProvider _customerProvider;
+  List<Customer> _customers = [];
   bool _isLoading = true;
   String? _selectedSortBy;
   String? _selectedSortOrder;
   final TextEditingController _searchController = TextEditingController();
-  bool _showAcceptedOrders = false;
 
   @override
   void dispose() {
@@ -31,29 +30,25 @@ class _OrderListScreenState extends State<OrderListScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _orderProvider = context.read<OrderProvider>();
-    _loadOrders();
+    _customerProvider = context.read<CustomerProvider>();
+    _loadCustomers();
   }
 
-  Future<void> _loadOrders() async {
+  Future<void> _loadCustomers() async {
     try {
       setState(() {
         _isLoading = true;
       });
 
-      int? searchId;
-      if (_searchController.text.isNotEmpty) {
-        searchId = int.tryParse(_searchController.text);
-      }
-
-      final data = await _orderProvider.getOrders(
-        isAccepted: _showAcceptedOrders,
-        idGTE: searchId,
+      final data = await _customerProvider.getCustomers(
+        searchString:
+            _searchController.text.isNotEmpty ? _searchController.text : null,
       );
 
       setState(() {
-        final List<dynamic> ordersJson = data['result'] ?? [];
-        _orders = ordersJson.map((json) => Order.fromJson(json)).toList();
+        final List<dynamic> customersJson = data['result'] ?? [];
+        _customers =
+            customersJson.map((json) => Customer.fromJson(json)).toList();
         _applySorting();
         _isLoading = false;
       });
@@ -61,29 +56,22 @@ class _OrderListScreenState extends State<OrderListScreen> {
       setState(() {
         _isLoading = false;
       });
-      // TODO: Handle error appropriately
-      print('Error loading orders: $e');
+      print('Error loading customers: $e');
     }
-  }
-
-  void _toggleAcceptedOrders() {
-    setState(() {
-      _showAcceptedOrders = !_showAcceptedOrders;
-      _loadOrders();
-    });
   }
 
   void _applySorting() {
     if (_selectedSortBy == null) return;
 
     switch (_selectedSortBy) {
-      case 'Najveca cijena':
-        _orders.sort((a, b) => (b.price ?? 0).compareTo(a.price ?? 0));
+      case 'Ime A-Ž':
+        _customers
+            .sort((a, b) => (a.firstName ?? '').compareTo(b.firstName ?? ''));
         break;
-      case 'Najniza cijena':
-        _orders.sort((a, b) => (a.price ?? 0).compareTo(b.price ?? 0));
+      case 'Ime Ž-A':
+        _customers
+            .sort((a, b) => (b.firstName ?? '').compareTo(a.firstName ?? ''));
         break;
-      // TODO: implement time sorting when its added to BE
     }
   }
 
@@ -92,7 +80,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
       _selectedSortBy = null;
       _selectedSortOrder = null;
       _searchController.clear();
-      _loadOrders();
+      _loadCustomers();
     });
   }
 
@@ -118,13 +106,13 @@ class _OrderListScreenState extends State<OrderListScreen> {
                     SizedBox(
                       width: 300,
                       child: FoodKingTextField(
-                        labelText: 'ID Narudzbe',
+                        labelText: 'Pretraga korisnika',
                         controller: _searchController,
                       ),
                     ),
                     const SizedBox(width: 16),
                     ElevatedButton(
-                      onPressed: _loadOrders,
+                      onPressed: _loadCustomers,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.blue,
@@ -160,35 +148,12 @@ class _OrderListScreenState extends State<OrderListScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      _showAcceptedOrders
-                          ? "Prihvaćene narudzbe"
-                          : "Neprihvaćene narudzbe",
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    ElevatedButton(
-                      onPressed: _toggleAcceptedOrders,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            _showAcceptedOrders ? Colors.green : Colors.blue,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      child: Text(_showAcceptedOrders
-                          ? "Neprihvaćene narudžbe"
-                          : "Prihvaćene narudžbe"),
-                    ),
-                  ],
+                const Text(
+                  "Lista korisnika",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Row(
                   children: [
@@ -210,8 +175,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                         value: _selectedSortBy,
                         underline: const SizedBox(),
                         hint: const Text('Odaberi'),
-                        items: ['Najveca cijena', 'Najniza cijena']
-                            .map((String value) {
+                        items: ['Ime A-Ž', 'Ime Ž-A'].map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),
@@ -227,37 +191,11 @@ class _OrderListScreenState extends State<OrderListScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: DropdownButton<String>(
-                        value: _selectedSortOrder,
-                        underline: const SizedBox(),
-                        hint: const Text('Odaberi'),
-                        items: ['Najnovije', 'Najstarije'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            setState(() {
-                              _selectedSortOrder = newValue;
-                            });
-                          }
-                        },
-                      ),
-                    ),
                     const SizedBox(width: 16),
                     IconButton(
-                      onPressed: _loadOrders,
+                      onPressed: _loadCustomers,
                       icon: const Icon(Icons.refresh),
-                      tooltip: 'Osvježi narudžbe',
+                      tooltip: 'Osvježi listu',
                     ),
                     const SizedBox(width: 8),
                     IconButton(
@@ -280,26 +218,18 @@ class _OrderListScreenState extends State<OrderListScreen> {
                   borderRadius: BorderRadius.circular(8),
                   child: _isLoading
                       ? const Center(child: CircularProgressIndicator())
-                      : _orders.isEmpty
-                          ? const Center(child: Text('Nema narudžbi'))
+                      : _customers.isEmpty
+                          ? const Center(child: Text('Nema korisnika'))
                           : ListView.builder(
-                              itemCount: _orders.length,
+                              itemCount: _customers.length,
                               itemBuilder: (context, index) {
-                                final order = _orders[index];
-                                return OrderListItem(
+                                final customer = _customers[index];
+                                return KorisniciListItem(
                                   text:
-                                      "Order #${order.id ?? 'N/A'} - \$${order.price?.toStringAsFixed(2) ?? '0.00'}",
+                                      "${customer.firstName ?? ''} ${customer.lastName ?? ''} (${customer.email ?? ''})",
                                   onDetailsPressed: () {
-                                    // TODO: Implement order details navigation
+                                    // TODO: Implement customer details navigation
                                   },
-                                  accepted: order.isAccepted ?? false,
-                                  onAccept: () {
-                                    // TODO: Implement accept order functionality
-                                  },
-                                  onReject: () {
-                                    // TODO: Implement reject order functionality
-                                  },
-                                  buttonWidth: 80,
                                 );
                               },
                             ),
@@ -309,7 +239,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
           ],
         ),
       ),
-      appBarTitle: "Order list screen",
+      appBarTitle: "Lista korisnika",
     );
   }
 }
