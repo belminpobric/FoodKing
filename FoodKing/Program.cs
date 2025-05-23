@@ -26,6 +26,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IMenuService, MenuService>();
+builder.Services.AddTransient<IDailyMenuService, DailyMenuService>();
 
 builder.Services.AddTransient<BaseState>();
 builder.Services.AddTransient<AcceptedOrderState>();
