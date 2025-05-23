@@ -5,6 +5,7 @@ import 'package:foodking_admin/widgets/korisnici_list_item.dart';
 import 'package:foodking_admin/widgets/foodKing_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:foodking_admin/models/customer.dart';
+import 'package:foodking_admin/screens/customer_details_screen.dart';
 
 class CustomerListScreen extends StatefulWidget {
   const CustomerListScreen({super.key});
@@ -228,7 +229,13 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                                   text:
                                       "${customer.firstName ?? ''} ${customer.lastName ?? ''} (${customer.email ?? ''})",
                                   onDetailsPressed: () {
-                                    // TODO: Implement customer details navigation
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CustomerDetailsScreen(
+                                                customer: customer),
+                                      ),
+                                    );
                                   },
                                 );
                               },
