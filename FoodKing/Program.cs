@@ -78,6 +78,11 @@ builder.Services.AddAuthentication("BasicAuthentication")
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dataContext = scope.ServiceProvider.GetRequiredService<FoodKingContext>();
+    dataContext.Database.Migrate();
+}
 // Development-only middleware
 if (app.Environment.IsDevelopment())
 {
@@ -93,10 +98,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dataContext = scope.ServiceProvider.GetRequiredService<FoodKingContext>();
-    dataContext.Database.EnsureCreated();
-}
 
 app.Run();
