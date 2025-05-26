@@ -12,7 +12,8 @@ public partial class Customer
     public string LastName { get; set; } = null!;
 
     public string PhoneNumber { get; set; } = null!;
-
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
     public string Email { get; set; } = null!;
 
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();

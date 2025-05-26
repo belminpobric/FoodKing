@@ -10,7 +10,8 @@ public partial class UserHasRole
     public int UserId { get; set; }
 
     public int RoleId { get; set; }
-
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
     public virtual Role Role { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;

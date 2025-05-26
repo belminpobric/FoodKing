@@ -12,7 +12,8 @@ public partial class OrderDetail
     public int ProductId { get; set; }
 
     public int? CustomerId { get; set; }
-
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
     public virtual Customer? Customer { get; set; }
 
     public virtual ICollection<OrderHasOrderDetail> OrderHasOrderDetails { get; } = new List<OrderHasOrderDetail>();

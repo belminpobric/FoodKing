@@ -24,6 +24,8 @@ public partial class User
     public string Password { get; set; } = null!;
 
     public string? Photo { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
     public virtual ICollection<UserHasRole> UserHasRoles { get; } = new List<UserHasRole>();
 }

@@ -28,7 +28,7 @@ namespace FoodKing.Services
         }
         public virtual async Task BeforeUpdate(TDb entity, TUpdate update)
         {
-
+            
         }
         public virtual async Task<T> Update(int id, TUpdate update)
         {
@@ -38,6 +38,7 @@ namespace FoodKing.Services
             {
                 throw new Exception("Entity does not exist.");
             }
+            
             _mapper.Map(update, entity);
             await BeforeUpdate(entity, update);
 

@@ -17,7 +17,7 @@ namespace FoodKing.Model.Requests
         public string PhoneNumber { get; set; } = null!;
 
         public string Email { get; set; } = null!;
-
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public string Address { get; set; } = null!;
 
         public string CurrentAddress { get; set; } = null!;
