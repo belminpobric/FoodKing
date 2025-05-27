@@ -18,6 +18,10 @@ namespace FoodKing.Model
         public string PhoneNumber { get; set; } = null!;
 
         public string Email { get; set; } = null!;
+        public string? Photo { get; set; }
+        public string? Address { get; set; }
+        public string? Username { get; set; }
+
 
     }
 }
