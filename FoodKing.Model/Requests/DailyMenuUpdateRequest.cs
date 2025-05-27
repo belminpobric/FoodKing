@@ -11,6 +11,7 @@ namespace FoodKing.Model.Requests
         public int Id { get; set; }
 
         public string Title { get; set; } = null!;
+        public DateTime updatedAt { get; set; } = DateTime.Now;
 
     }
 }

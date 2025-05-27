@@ -13,5 +13,6 @@ namespace FoodKing.Model.Requests
         public bool? IsAccepted { get; set; }
 
         public string? StateMachine { get; set; }
+        public DateTime updatedAt { get; set; } = DateTime.Now;
     }
 }

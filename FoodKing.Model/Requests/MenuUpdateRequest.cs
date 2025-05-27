@@ -9,6 +9,6 @@ namespace FoodKing.Model.Requests
     public class MenuUpdateRequest
     {
         public string Title { get; set; }
-
+        public DateTime updatedAt { get; set; } = DateTime.Now;
     }
 }
