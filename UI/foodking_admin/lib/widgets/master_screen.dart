@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodking_admin/screens/login_screen.dart';
+import 'package:foodking_admin/screens/menu_list_screen.dart';
 import '../screens/order_list_screen.dart';
 import '../screens/customer_list_screen.dart';
 
@@ -36,6 +37,16 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const CustomerListScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                title: const Text('Menu'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const MenuListScreen(),
                     ),
                   );
                 },
