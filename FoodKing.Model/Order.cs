@@ -11,5 +11,8 @@
         public string? StateMachine { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public virtual ICollection<OrderHasOrderDetail> OrderHasOrderDetails { get; } = new List<OrderHasOrderDetail>();
+
+
     }
 }

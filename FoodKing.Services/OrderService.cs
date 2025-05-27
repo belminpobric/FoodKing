@@ -31,6 +31,9 @@ namespace FoodKing.Services
             {
                 filteredQuery = filteredQuery.Where(x => x.Id.ToString().StartsWith(search.IdGTE));
             }
+            filteredQuery = filteredQuery.Include("OrderHasOrderDetails.OrderDetail.Customer");
+            filteredQuery = filteredQuery.Include("OrderHasOrderDetails.OrderDetail.Product");
+
             return filteredQuery;
         }
 
