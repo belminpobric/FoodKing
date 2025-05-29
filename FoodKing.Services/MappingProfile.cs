@@ -22,12 +22,15 @@ namespace FoodKing.Services
             CreateMap<Model.Requests.OrderInsertRequest, Database.Order>();
             CreateMap<Model.Requests.OrderUpdateRequest, Database.Order>();
 
+            CreateMap<Database.Product, Model.Product>();
+            CreateMap<Model.Requests.ProductInsertRequest, Database.Product>();
+            CreateMap<Model.Requests.ProductUpdateRequest, Database.Product>();
+
             CreateMap<Database.UserHasRole, Model.UserHasRole>();
             CreateMap<Database.OrderDetail, Model.OrderDetail>();
             CreateMap<Database.OrderHasOrderDetail, Model.OrderHasOrderDetail>();
 
 
-            CreateMap<Database.Product, Model.Product>();
 
 
             CreateMap<Database.Role, Model.Role>();
