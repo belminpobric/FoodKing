@@ -18,7 +18,14 @@ namespace FoodKing.Services
             {
                 query = query.Where(x => x.Title.StartsWith(search.Title));
             }
-
+            if (search?.SortByCreatedAtDesc == true)
+            {
+                query = query.OrderByDescending(x => x.CreatedAt);
+            }
+            else
+            {
+                query = query.OrderBy(x => x.CreatedAt);
+            }
             return query;
         }
     }

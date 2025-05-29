@@ -40,6 +40,14 @@ namespace FoodKing.Services
             {
                 filteredQuery = query.Where(x => x.Email.StartsWith(search.Email));
             }
+            if (search?.SortByCreatedAtDesc == true)
+            {
+                filteredQuery = query.OrderByDescending(x => x.CreatedAt);
+            } 
+            else
+            {
+                filteredQuery = query.OrderBy(x => x.CreatedAt);
+            }
 
             return filteredQuery;
         }

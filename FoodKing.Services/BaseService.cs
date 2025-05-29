@@ -3,6 +3,7 @@ using FoodKing.Model;
 using FoodKing.Model.SearchObjects;
 using FoodKing.Services.Database;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace FoodKing.Services
 {

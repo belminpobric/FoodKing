@@ -49,6 +49,14 @@ namespace FoodKing.Services
             {
                 query = query.Include("UserHasRoles.Role");
             }
+            if (search?.SortByCreatedAtDesc == true)
+            {
+                query = query.OrderByDescending(x => x.CreatedAt);
+            }
+            else
+            {
+                query = query.OrderBy(x => x.CreatedAt);
+            }
             return query;
         }
 

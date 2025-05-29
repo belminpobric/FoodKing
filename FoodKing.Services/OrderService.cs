@@ -33,7 +33,14 @@ namespace FoodKing.Services
             }
             filteredQuery = filteredQuery.Include("OrderHasOrderDetails.OrderDetail.Customer");
             filteredQuery = filteredQuery.Include("OrderHasOrderDetails.OrderDetail.Product");
-
+            if (search?.SortByCreatedAtDesc == true)
+            {
+                filteredQuery = query.OrderByDescending(x => x.CreatedAt);
+            }
+            else
+            {
+                filteredQuery = query.OrderBy(x => x.CreatedAt);
+            }
             return filteredQuery;
         }
 
