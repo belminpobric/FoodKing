@@ -5,6 +5,7 @@ import 'package:foodking_admin/widgets/foodKing_text_field.dart';
 import 'package:foodking_admin/widgets/menu_list_item.dart';
 import 'package:provider/provider.dart';
 import 'package:foodking_admin/models/menu.dart';
+import 'package:foodking_admin/utils/pdf_utils.dart';
 
 class MenuListScreen extends StatefulWidget {
   const MenuListScreen({super.key});
@@ -125,8 +126,23 @@ class _MenuListScreenState extends State<MenuListScreen> {
                   ],
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // TODO: Implement report download
+                  onPressed: () async {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Izvještaj se generiše...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    await generateMenusPdf(
+                      _menus,
+                      onStart: () {},
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Izvještaj je spreman za preuzimanje!'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

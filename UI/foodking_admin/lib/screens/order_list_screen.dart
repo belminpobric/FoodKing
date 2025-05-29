@@ -5,6 +5,8 @@ import 'package:foodking_admin/widgets/order_list_item.dart';
 import 'package:foodking_admin/widgets/foodKing_text_field.dart';
 import 'package:foodking_admin/models/order.dart';
 import 'package:provider/provider.dart';
+import 'package:foodking_admin/screens/order_detail_screen.dart';
+import 'package:foodking_admin/utils/pdf_utils.dart';
 
 class OrderListScreen extends StatefulWidget {
   const OrderListScreen({super.key});
@@ -61,7 +63,6 @@ class _OrderListScreenState extends State<OrderListScreen> {
       setState(() {
         _isLoading = false;
       });
-      // TODO: Handle error appropriately
       print('Error loading orders: $e');
     }
   }
@@ -140,8 +141,23 @@ class _OrderListScreenState extends State<OrderListScreen> {
                   ],
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // TODO: Implement report download
+                  onPressed: () async {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Izvještaj se generiše...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    await generateOrdersPdf(
+                      _orders,
+                      onStart: () {},
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Izvještaj je spreman za preuzimanje!'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -290,7 +306,12 @@ class _OrderListScreenState extends State<OrderListScreen> {
                                   text:
                                       "Order #${order.id ?? 'N/A'} - \$${order.price?.toStringAsFixed(2) ?? '0.00'}",
                                   onDetailsPressed: () {
-                                    // TODO: Implement order details navigation
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            OrderDetailScreen(order: order),
+                                      ),
+                                    );
                                   },
                                   accepted: order.isAccepted ?? false,
                                   onAccept: () {
