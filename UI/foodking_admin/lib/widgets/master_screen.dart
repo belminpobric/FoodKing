@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foodking_admin/screens/login_screen.dart';
 import 'package:foodking_admin/screens/menu_list_screen.dart';
 import '../screens/order_list_screen.dart';
 import '../screens/customer_list_screen.dart';

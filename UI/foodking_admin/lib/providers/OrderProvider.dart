@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'package:foodking_admin/utils/util.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:foodking_admin/providers/base_provider.dart';
 
@@ -22,6 +20,7 @@ class OrderProvider extends BaseProvider {
     return super.get(queryParams: queryParams);
   }
 
+  @override
   bool isValidResponse(Response response) {
     if (response.statusCode < 299) {
       return true;
@@ -32,6 +31,7 @@ class OrderProvider extends BaseProvider {
     }
   }
 
+  @override
   Map<String, String> createHeaders() {
     String username = Authorization.username ?? "";
     String password = Authorization.password ?? "";

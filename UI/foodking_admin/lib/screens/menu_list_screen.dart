@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodking_admin/providers/MenuProvider.dart';
 import 'package:foodking_admin/widgets/master_screen.dart';
-import 'package:foodking_admin/widgets/korisnici_list_item.dart';
 import 'package:foodking_admin/widgets/foodKing_text_field.dart';
 import 'package:foodking_admin/widgets/menu_list_item.dart';
 import 'package:provider/provider.dart';
