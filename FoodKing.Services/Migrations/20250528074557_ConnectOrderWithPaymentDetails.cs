@@ -11,14 +11,14 @@ namespace FoodKing.Services.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "PaymentDetailsId",
+                name: "PaymentDetailId",
                 table: "Order",
                 nullable: true
                 );
             migrationBuilder.AddForeignKey(
                     name: "Order_PaymentDetails_FK",
                     table: "Order",
-                    column: "PaymentDetailsId",
+                    column: "PaymentDetailId",
                     principalTable: "PaymentDetails",
                     principalColumn: "Id"
                 );
@@ -28,7 +28,7 @@ namespace FoodKing.Services.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PaymentDetailsId",
+                name: "PaymentDetailId",
                 table: "Order");
             migrationBuilder.DropForeignKey(
                 name: "Order_PaymentDetails_FK",
