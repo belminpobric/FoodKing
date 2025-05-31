@@ -17,6 +17,8 @@ namespace FoodKing.Services
         {
             var filteredQuery = base.AddFilter(query, search);
 
+            filteredQuery = query.Where(x => x.SoftDelete == false);
+
             if (!string.IsNullOrWhiteSpace(search?.FirstName))
             {
                 filteredQuery = query.Where(x => x.FirstName.StartsWith(search.FirstName));
@@ -50,6 +52,16 @@ namespace FoodKing.Services
             }
 
             return filteredQuery;
+        }
+        public async Task Delete(int id)
+        {
+            var entity = await _context.Customers.FindAsync(id);
+            if (entity == null)
+            {
+                throw new Exception("Entity does not exist.");
+            }
+            entity.SoftDelete = true;
+            await _context.SaveChangesAsync();
         }
     }
 }

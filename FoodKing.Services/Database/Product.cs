@@ -14,4 +14,6 @@ public partial class Product
     public virtual ICollection<MenuHasProduct> MenuHasProducts { get; } = new List<MenuHasProduct>();
 
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
+    public bool? SoftDelete { get; set; }
+
 }

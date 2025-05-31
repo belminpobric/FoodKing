@@ -15,4 +15,6 @@ public partial class UserHasRole
     public virtual Role Role { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
+    public bool? SoftDelete { get; set; }
+
 }

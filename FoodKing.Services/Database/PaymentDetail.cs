@@ -11,4 +11,6 @@ public partial class PaymentDetail
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public bool? SoftDelete { get; set; }
+
 }

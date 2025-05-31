@@ -10,5 +10,7 @@ public partial class Menu
     public string Title { get; set; } = null!;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public bool? SoftDelete { get; set; }
+
     public virtual ICollection<MenuHasProduct> MenuHasProducts { get; } = new List<MenuHasProduct>();
 }

@@ -28,4 +28,6 @@ public partial class User
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
     public virtual ICollection<UserHasRole> UserHasRoles { get; } = new List<UserHasRole>();
+    public bool? SoftDelete { get; set; }
+
 }

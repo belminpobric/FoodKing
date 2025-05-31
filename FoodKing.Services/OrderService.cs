@@ -22,6 +22,8 @@ namespace FoodKing.Services
         public override IQueryable<Database.Order> AddFilter(IQueryable<Database.Order> query, OrderSearchObject? search = null)
         {
             var filteredQuery = base.AddFilter(query,search);
+            filteredQuery = query.Where(x => x.SoftDelete == false);
+
             if (search.IsAccepted.HasValue)
             {
                 filteredQuery = query.Where(x => x.IsAccepted == search.IsAccepted);
@@ -43,6 +45,7 @@ namespace FoodKing.Services
             {
                 filteredQuery = query.OrderBy(x => x.CreatedAt);
             }
+
             return filteredQuery;
         }
 
@@ -113,6 +116,17 @@ namespace FoodKing.Services
             var state = _baseState.CreateState(entity.StateMachine);
 
             return await state.Deliver(id);
+        }
+
+        public async Task Delete(int id)
+        {
+            var entity = await _context.Orders.FindAsync(id);
+            if (entity == null)
+            {
+                throw new Exception("Entity does not exist.");
+            }
+            entity.SoftDelete = true;
+            await _context.SaveChangesAsync();
         }
     }
 }

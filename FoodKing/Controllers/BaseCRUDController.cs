@@ -2,6 +2,8 @@
 using FoodKing.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FoodKing.Controllers
 {
@@ -27,6 +29,11 @@ namespace FoodKing.Controllers
         public virtual async Task<T> Update(int id, [FromBody] TUpdate update)
         {
             return await _service.Update(id, update);
+        }
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
+        {
+            await _service.Delete(id);
         }
     }
 }

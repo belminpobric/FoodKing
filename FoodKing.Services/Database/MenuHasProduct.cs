@@ -15,4 +15,6 @@ public partial class MenuHasProduct
     public virtual Menu? Menu { get; set; }
 
     public virtual Product? Product { get; set; }
+    public bool? SoftDelete { get; set; }
+
 }

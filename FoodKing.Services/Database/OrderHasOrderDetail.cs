@@ -15,4 +15,6 @@ public partial class OrderHasOrderDetail
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
     public virtual OrderDetail? OrderDetail { get; set; }
+    public bool? SoftDelete { get; set; }
+
 }

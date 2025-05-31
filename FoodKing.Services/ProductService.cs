@@ -26,7 +26,19 @@ namespace FoodKing.Services
             {
                 query = query.OrderBy(x => x.CreatedAt);
             }
+            query = query.Where(x => x.SoftDelete == false);
+
             return query;
+        }
+        public async Task Delete(int id)
+        {
+            var entity = await _context.Products.FindAsync(id);
+            if (entity == null)
+            {
+                throw new Exception("Entity does not exist.");
+            }
+            entity.SoftDelete = true;
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -11,5 +11,6 @@ namespace FoodKing.Services
     {
         Task<TModel> Insert(TInsert obj);
         Task<TModel> Update(int id, TUpdate obj);
+        Task Delete(int id);
     }
 }

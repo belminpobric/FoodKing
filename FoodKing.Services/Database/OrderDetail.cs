@@ -19,4 +19,6 @@ public partial class OrderDetail
     public virtual ICollection<OrderHasOrderDetail> OrderHasOrderDetails { get; } = new List<OrderHasOrderDetail>();
 
     public virtual Product Product { get; set; } = null!;
+    public bool? SoftDelete { get; set; }
+
 }

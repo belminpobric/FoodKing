@@ -57,6 +57,7 @@ namespace FoodKing.Services
             {
                 query = query.OrderBy(x => x.CreatedAt);
             }
+            query  = query.Where(x => x.SoftDelete == false);
             return query;
         }
 
@@ -75,6 +76,16 @@ namespace FoodKing.Services
                 return null;
             }
             return _mapper.Map<Model.User>(entity);
+        }
+        public async Task Delete(int id)
+        {
+            var entity = await _context.Users.FindAsync(id);
+            if (entity == null)
+            {
+                throw new Exception("Entity does not exist.");
+            }
+            entity.SoftDelete = true;
+            await _context.SaveChangesAsync();
         }
     }
 }
