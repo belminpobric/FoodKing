@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodking_admin/providers/MenuProvider.dart';
+import 'package:foodking_admin/screens/menu_insert_screen.dart';
 import 'package:foodking_admin/widgets/master_screen.dart';
 import 'package:foodking_admin/widgets/foodKing_text_field.dart';
 import 'package:foodking_admin/widgets/menu_list_item.dart';
@@ -166,6 +167,11 @@ class _MenuListScreenState extends State<MenuListScreen> {
                     ElevatedButton(
                       onPressed: () {
                         // TODO: Implement menu insert
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => MenuInsertScreen(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,

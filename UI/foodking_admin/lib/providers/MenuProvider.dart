@@ -6,4 +6,8 @@ class MenuProvider extends BaseProvider {
   Future<dynamic> getMenus({String? searchString}) async {
     return super.get();
   }
+
+  Future<dynamic> insertMenu(Map<String, dynamic> menu) async {
+    return super.post(menu);
+  }
 }

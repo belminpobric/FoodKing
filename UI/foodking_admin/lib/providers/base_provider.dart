@@ -38,6 +38,26 @@ abstract class BaseProvider with ChangeNotifier {
     }
   }
 
+  Future<dynamic> post(Map<String, dynamic> obj) async {
+    var url = "$_baseUrl$endpoint";
+
+    print("Request URL: $url"); // Debug print
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response =
+        await http.post(uri, headers: headers, body: jsonEncode(obj));
+    print("Response status: ${response.statusCode}"); // Debug print
+    print("Response body: ${response.body}"); // Debug print
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
+
   bool isValidResponse(Response response) {
     if (response.statusCode < 299) {
       return true;
