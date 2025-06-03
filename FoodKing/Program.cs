@@ -31,6 +31,7 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IPaymentDetailService, PaymentDetailService>();
 builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IStaffService, StaffService>();
+builder.Services.AddTransient<IOrderDetailService, OrderDetailService>();
 
 builder.Services.AddTransient<BaseState>();
 builder.Services.AddTransient<AcceptedOrderState>();
