@@ -30,20 +30,14 @@ namespace FoodKing.Services
             CreateMap<Model.Requests.PaymentDetailInsertRequest, Database.PaymentDetail>();
             CreateMap<Model.Requests.PaymentDetailUpdateRequest, Database.PaymentDetail>();
 
+            CreateMap<Database.Role, Model.Role>();
+            CreateMap<Model.Requests.RoleInsertRequest, Database.Role>();
+            CreateMap<Model.Requests.RoleUpdateRequest, Database.Role>();
+
             CreateMap<Database.UserHasRole, Model.UserHasRole>();
             CreateMap<Database.OrderDetail, Model.OrderDetail>();
             CreateMap<Database.OrderHasOrderDetail, Model.OrderHasOrderDetail>();
 
-
-
-
-            CreateMap<Database.Role, Model.Role>();
-
-            //CreateMap<Database.Proizvodi, Model.Proizvodi>();
-
-            //CreateMap<Database.JediniceMjere, Model.JediniceMjere>();
-
-            //CreateMap<Database.VrsteProizvodum, Model.VrsteProizvodum>();
         }
     }
 }
