@@ -30,6 +30,7 @@ namespace FoodKing.Services.OrderStateMachine
         {
             throw new UserException("Not allowed");
         }
+
         public virtual Task<Model.Order> Update(int id, OrderUpdateRequest request)
         {
             throw new UserException("Not allowed");
@@ -74,6 +75,8 @@ namespace FoodKing.Services.OrderStateMachine
                     return _serviceProvider.GetService<DeliveredOrderState>();
                 case "Canceled":
                     return _serviceProvider.GetService<CanceledOrderState>();
+                case "Updated":
+                    return _serviceProvider.GetService<UpdatedOrderState>();
                 default:
                     throw new UserException("Not allowed");
             }
