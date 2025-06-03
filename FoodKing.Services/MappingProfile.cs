@@ -26,6 +26,10 @@ namespace FoodKing.Services
             CreateMap<Model.Requests.ProductInsertRequest, Database.Product>();
             CreateMap<Model.Requests.ProductUpdateRequest, Database.Product>();
 
+            CreateMap<Database.PaymentDetail, Model.PaymentDetail>();
+            CreateMap<Model.Requests.PaymentDetailInsertRequest, Database.PaymentDetail>();
+            CreateMap<Model.Requests.PaymentDetailUpdateRequest, Database.PaymentDetail>();
+
             CreateMap<Database.UserHasRole, Model.UserHasRole>();
             CreateMap<Database.OrderDetail, Model.OrderDetail>();
             CreateMap<Database.OrderHasOrderDetail, Model.OrderHasOrderDetail>();
