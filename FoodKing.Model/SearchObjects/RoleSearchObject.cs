@@ -8,7 +8,7 @@ namespace FoodKing.Model.SearchObjects
 {
     public class RoleSearchObject : BaseSearchObject
     {
-        public string Name { get; set; } = null!;
+        public string? Name { get; set; }
 
         public bool? isRoleIncluded { get; set; }
     }

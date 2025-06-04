@@ -8,9 +8,9 @@ namespace FoodKing.Model.SearchObjects
 {
     public class OrderDetailSearchObject : BaseSearchObject
     {
-        public string Details { get; set; } = null!;
+        public string? Details { get; set; }
 
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
 
         public int? CustomerId { get; set; }
     }
