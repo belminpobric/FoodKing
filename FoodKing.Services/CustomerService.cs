@@ -17,7 +17,7 @@ namespace FoodKing.Services
         {
             var filteredQuery = base.AddFilter(query, search);
 
-            filteredQuery = query.Where(x => x.SoftDelete == false);
+            filteredQuery = query.Where(x => x.SoftDelete == false || x.SoftDelete == null);
 
             if (!string.IsNullOrWhiteSpace(search?.FirstName))
             {

@@ -22,7 +22,7 @@ namespace FoodKing.Services
         public override IQueryable<Database.Order> AddFilter(IQueryable<Database.Order> query, OrderSearchObject? search = null)
         {
             var filteredQuery = base.AddFilter(query,search);
-            filteredQuery = query.Where(x => x.SoftDelete == false);
+            filteredQuery = query.Where(x => x.SoftDelete == false || x.SoftDelete == null);
 
             if (search.IsAccepted.HasValue)
             {

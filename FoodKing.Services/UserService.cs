@@ -57,7 +57,7 @@ namespace FoodKing.Services
             {
                 query = query.OrderBy(x => x.CreatedAt);
             }
-            query  = query.Where(x => x.SoftDelete == false);
+            query  = query.Where(x => x.SoftDelete == false || x.SoftDelete == null);
             return query;
         }
 
