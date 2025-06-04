@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:foodking_admin/models/menu.dart';
 import 'package:foodking_admin/providers/MenuProvider.dart';
+import 'package:foodking_admin/screens/menu_list_screen.dart';
 import 'package:provider/provider.dart';
 
 class MenuInsertScreen extends StatefulWidget {
@@ -36,7 +37,11 @@ class _MenuInsertScreenState extends State<MenuInsertScreen> {
       );
 
       // Go back to the menu list screen
-      Navigator.pop(context);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const MenuListScreen(),
+        ),
+      );
     }
   }
 

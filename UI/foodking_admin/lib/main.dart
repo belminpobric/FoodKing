@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foodking_admin/providers/MenuProvider.dart';
 import 'package:foodking_admin/providers/OrderProvider.dart';
 import 'package:foodking_admin/providers/CustomerProvider.dart';
+import 'package:foodking_admin/providers/StaffProvider.dart';
 import 'package:foodking_admin/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => OrderProvider()),
       ChangeNotifierProvider(create: (_) => CustomerProvider()),
       ChangeNotifierProvider(create: (_) => MenuProvider()),
+      ChangeNotifierProvider(create: (_) => StaffProvider()),
     ],
     child: const MyMaterialApp(),
   ));

@@ -1,4 +1,5 @@
 import 'dart:html' as html;
+import 'package:foodking_admin/models/staff.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -109,5 +110,43 @@ Future<void> generateMenusPdf(List<Menu> menus,
     ),
   );
   await _savePdfWeb(pdf, 'Menu_Report');
+  print('Menu PDF download started');
+}
+
+Future<void> generateStaffsPdf(List<Staff> staffs,
+    {void Function()? onStart}) async {
+  onStart?.call();
+  print('Starting Staff PDF generation...');
+  final pdf = pw.Document();
+  pdf.addPage(
+    pw.MultiPage(
+      build: (context) => [
+        pw.Header(level: 0, child: pw.Text('Staff Report')),
+        pw.Table.fromTextArray(
+          headers: [
+            'ID',
+            'First Name',
+            'Last Name',
+            'Phone Number',
+            'Email',
+            'Created At',
+            'Updated At'
+          ],
+          data: staffs
+              .map((m) => [
+                    m.id?.toString() ?? '',
+                    m.firstName ?? '',
+                    m.lastName ?? '',
+                    m.phoneNumber ?? '',
+                    m.email ?? '',
+                    m.createdAt ?? '',
+                    m.updatedAt ?? '',
+                  ])
+              .toList(),
+        ),
+      ],
+    ),
+  );
+  await _savePdfWeb(pdf, 'Staff_Report');
   print('Menu PDF download started');
 }

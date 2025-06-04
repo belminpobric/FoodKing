@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:foodking_admin/providers/OrderProvider.dart';
+import 'package:foodking_admin/providers/StaffProvider.dart';
+import 'package:foodking_admin/screens/staff_insert_screen.dart';
 import 'package:foodking_admin/widgets/master_screen.dart';
-import 'package:foodking_admin/widgets/order_list_item.dart';
 import 'package:foodking_admin/widgets/foodKing_text_field.dart';
-import 'package:foodking_admin/models/order.dart';
+import 'package:foodking_admin/widgets/staff_list_item.dart';
 import 'package:provider/provider.dart';
-import 'package:foodking_admin/screens/order_detail_screen.dart';
+import 'package:foodking_admin/models/staff.dart';
 import 'package:foodking_admin/utils/pdf_utils.dart';
 
-class OrderListScreen extends StatefulWidget {
-  const OrderListScreen({super.key});
+class StaffListScreen extends StatefulWidget {
+  const StaffListScreen({super.key});
 
   @override
-  State<OrderListScreen> createState() => _OrderListScreenState();
+  State<StaffListScreen> createState() => _StaffListScreenState();
 }
 
-class _OrderListScreenState extends State<OrderListScreen> {
-  late OrderProvider _orderProvider;
-  List<Order> _orders = [];
+class _StaffListScreenState extends State<StaffListScreen> {
+  late StaffProvider _staffProvider;
+  List<Staff> _staffs = [];
   bool _isLoading = true;
   String? _selectedSortBy;
   String? _selectedSortOrder;
   final TextEditingController _searchController = TextEditingController();
-  bool _showAcceptedOrders = false;
 
   @override
   void dispose() {
@@ -33,29 +32,24 @@ class _OrderListScreenState extends State<OrderListScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _orderProvider = context.read<OrderProvider>();
-    _loadOrders();
+    _staffProvider = context.read<StaffProvider>();
+    _loadStaffs();
   }
 
-  Future<void> _loadOrders() async {
+  Future<void> _loadStaffs() async {
     try {
       setState(() {
         _isLoading = true;
       });
 
-      int? searchId;
-      if (_searchController.text.isNotEmpty) {
-        searchId = int.tryParse(_searchController.text);
-      }
-
-      final data = await _orderProvider.getOrders(
-        isAccepted: _showAcceptedOrders,
-        idGTE: searchId,
+      final data = await _staffProvider.getStaffs(
+        searchString:
+            _searchController.text.isNotEmpty ? _searchController.text : null,
       );
 
       setState(() {
-        final List<dynamic> ordersJson = data['result'] ?? [];
-        _orders = ordersJson.map((json) => Order.fromJson(json)).toList();
+        final List<dynamic> staffsJson = data['result'] ?? [];
+        _staffs = staffsJson.map((json) => Staff.fromJson(json)).toList();
         _applySorting();
         _isLoading = false;
       });
@@ -63,28 +57,22 @@ class _OrderListScreenState extends State<OrderListScreen> {
       setState(() {
         _isLoading = false;
       });
-      print('Error loading orders: $e');
+      print('Error loading staffs: $e');
     }
-  }
-
-  void _toggleAcceptedOrders() {
-    setState(() {
-      _showAcceptedOrders = !_showAcceptedOrders;
-      _loadOrders();
-    });
   }
 
   void _applySorting() {
     if (_selectedSortBy == null) return;
 
     switch (_selectedSortBy) {
-      case 'Najveca cijena':
-        _orders.sort((a, b) => (b.price ?? 0).compareTo(a.price ?? 0));
+      case 'Naziv A-Ž':
+        _staffs
+            .sort((a, b) => (a.firstName ?? '').compareTo(b.firstName ?? ''));
         break;
-      case 'Najniza cijena':
-        _orders.sort((a, b) => (a.price ?? 0).compareTo(b.price ?? 0));
+      case 'Naziv Ž-A':
+        _staffs
+            .sort((a, b) => (b.firstName ?? '').compareTo(a.firstName ?? ''));
         break;
-      // TODO: implement time sorting when its added to BE
     }
   }
 
@@ -93,7 +81,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
       _selectedSortBy = null;
       _selectedSortOrder = null;
       _searchController.clear();
-      _loadOrders();
+      _loadStaffs();
     });
   }
 
@@ -119,13 +107,13 @@ class _OrderListScreenState extends State<OrderListScreen> {
                     SizedBox(
                       width: 300,
                       child: FoodKingTextField(
-                        labelText: 'ID Narudzbe',
+                        labelText: 'Pretraga osoblja',
                         controller: _searchController,
                       ),
                     ),
                     const SizedBox(width: 16),
                     ElevatedButton(
-                      onPressed: _loadOrders,
+                      onPressed: _loadStaffs,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.blue,
@@ -148,8 +136,8 @@ class _OrderListScreenState extends State<OrderListScreen> {
                         duration: Duration(seconds: 2),
                       ),
                     );
-                    await generateOrdersPdf(
-                      _orders,
+                    await generateStaffsPdf(
+                      _staffs,
                       onStart: () {},
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -178,33 +166,40 @@ class _OrderListScreenState extends State<OrderListScreen> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      _showAcceptedOrders
-                          ? "Prihvaćene narudzbe"
-                          : "Neprihvaćene narudzbe",
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
                     ElevatedButton(
-                      onPressed: _toggleAcceptedOrders,
+                      onPressed: () {
+                        // TODO: Implement staff insert
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => StaffInsertScreen(),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            _showAcceptedOrders ? Colors.green : Colors.blue,
+                        backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                            horizontal: 24, vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
-                      child: Text(_showAcceptedOrders
-                          ? "Neprihvaćene narudžbe"
-                          : "Prihvaćene narudžbe"),
+                      child: const Text('Dodaj osoblje'),
                     ),
                   ],
+                )
+              ],
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Lista osoblja",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Row(
                   children: [
@@ -226,8 +221,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                         value: _selectedSortBy,
                         underline: const SizedBox(),
                         hint: const Text('Odaberi'),
-                        items: ['Najveca cijena', 'Najniza cijena']
-                            .map((String value) {
+                        items: ['Naziv A-Ž', 'Naziv Ž-A'].map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),
@@ -243,37 +237,11 @@ class _OrderListScreenState extends State<OrderListScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: DropdownButton<String>(
-                        value: _selectedSortOrder,
-                        underline: const SizedBox(),
-                        hint: const Text('Odaberi'),
-                        items: ['Najnovije', 'Najstarije'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            setState(() {
-                              _selectedSortOrder = newValue;
-                            });
-                          }
-                        },
-                      ),
-                    ),
                     const SizedBox(width: 16),
                     IconButton(
-                      onPressed: _loadOrders,
+                      onPressed: _loadStaffs,
                       icon: const Icon(Icons.refresh),
-                      tooltip: 'Osvježi narudžbe',
+                      tooltip: 'Osvježi listu',
                     ),
                     const SizedBox(width: 8),
                     IconButton(
@@ -296,31 +264,15 @@ class _OrderListScreenState extends State<OrderListScreen> {
                   borderRadius: BorderRadius.circular(8),
                   child: _isLoading
                       ? const Center(child: CircularProgressIndicator())
-                      : _orders.isEmpty
-                          ? const Center(child: Text('Nema narudžbi'))
+                      : _staffs.isEmpty
+                          ? const Center(child: Text('Nema osoblja'))
                           : ListView.builder(
-                              itemCount: _orders.length,
+                              itemCount: _staffs.length,
                               itemBuilder: (context, index) {
-                                final order = _orders[index];
-                                return OrderListItem(
+                                final staff = _staffs[index];
+                                return StaffListItem(
                                   text:
-                                      "Order #${order.id ?? 'N/A'} - \$${order.price?.toStringAsFixed(2) ?? '0.00'}",
-                                  onDetailsPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            OrderDetailScreen(order: order),
-                                      ),
-                                    );
-                                  },
-                                  accepted: order.isAccepted ?? false,
-                                  onAccept: () {
-                                    // TODO: Implement accept order functionality
-                                  },
-                                  onReject: () {
-                                    // TODO: Implement reject order functionality
-                                  },
-                                  buttonWidth: 80,
+                                      "${staff.firstName ?? ''} ${staff.lastName ?? ''} (${staff.email ?? ''}) ${staff.phoneNumber ?? ''}",
                                 );
                               },
                             ),
@@ -330,7 +282,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
           ],
         ),
       ),
-      appBarTitle: "Detalji narudzba",
+      appBarTitle: "Lista osoblja",
     );
   }
 }
