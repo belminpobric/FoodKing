@@ -1,12 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:foodking_admin/models/staff.dart';
 import 'package:foodking_admin/providers/StaffProvider.dart';
 import 'package:foodking_admin/screens/staff_list_screen.dart';
 import 'package:provider/provider.dart';
 
 class StaffInsertScreen extends StatefulWidget {
+  const StaffInsertScreen({super.key});
+
   @override
   _StaffInsertScreenState createState() => _StaffInsertScreenState();
 }

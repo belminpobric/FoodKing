@@ -1,12 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:foodking_admin/models/menu.dart';
 import 'package:foodking_admin/providers/MenuProvider.dart';
 import 'package:foodking_admin/screens/menu_list_screen.dart';
 import 'package:provider/provider.dart';
 
 class MenuInsertScreen extends StatefulWidget {
+  const MenuInsertScreen({super.key});
+
   @override
   _MenuInsertScreenState createState() => _MenuInsertScreenState();
 }
@@ -47,26 +46,28 @@ class _MenuInsertScreenState extends State<MenuInsertScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Dodaj meni')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Naziv'),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Upisite naziv' : null,
-                onSaved: (value) => _title = value!,
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text('Dodaj'),
-              ),
-            ],
+    return Builder(
+      builder: (context) => Scaffold(
+        appBar: AppBar(title: Text('Dodaj meni')),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Naziv'),
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Upisite naziv' : null,
+                  onSaved: (value) => _title = value!,
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _submitForm,
+                  child: Text('Dodaj'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

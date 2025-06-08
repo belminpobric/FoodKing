@@ -1,24 +1,23 @@
-import 'dart:html' as html;
 import 'package:foodking_admin/models/staff.dart';
 import 'package:intl/intl.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import '../models/order.dart';
 import '../models/customer.dart';
 import '../models/menu.dart';
+import 'pdf_saver_impl.dart';
 
-Future<void> _savePdfWeb(pw.Document pdf, String title) async {
+Future<void> _savePdf(pw.Document pdf, String title) async {
   final now = DateTime.now();
   final formattedDate = DateFormat('yyyyMMdd_HHmmss').format(now);
   final fileName = '${title}_$formattedDate.pdf';
 
-  final bytes = await pdf.save();
-  final blob = html.Blob([bytes]);
-  final url = html.Url.createObjectUrlFromBlob(blob);
-  final anchor = html.AnchorElement(href: url)
-    ..setAttribute('download', fileName)
-    ..click();
-  html.Url.revokeObjectUrl(url);
+  try {
+    final pdfSaver = getPdfSaver();
+    await pdfSaver.savePdf(pdf, fileName);
+  } catch (e) {
+    print('Error saving PDF: $e');
+    rethrow;
+  }
 }
 
 Future<void> generateOrdersPdf(List<Order> orders,
@@ -44,7 +43,7 @@ Future<void> generateOrdersPdf(List<Order> orders,
       ],
     ),
   );
-  await _savePdfWeb(pdf, 'Order_Report');
+  await _savePdf(pdf, 'Order_Report');
   print('Order PDF download started');
 }
 
@@ -82,7 +81,7 @@ Future<void> generateCustomersPdf(List<Customer> customers,
       ],
     ),
   );
-  await _savePdfWeb(pdf, 'Customer_Report');
+  await _savePdf(pdf, 'Customer_Report');
   print('Customer PDF download started');
 }
 
@@ -109,7 +108,7 @@ Future<void> generateMenusPdf(List<Menu> menus,
       ],
     ),
   );
-  await _savePdfWeb(pdf, 'Menu_Report');
+  await _savePdf(pdf, 'Menu_Report');
   print('Menu PDF download started');
 }
 
@@ -147,6 +146,6 @@ Future<void> generateStaffsPdf(List<Staff> staffs,
       ],
     ),
   );
-  await _savePdfWeb(pdf, 'Staff_Report');
-  print('Menu PDF download started');
+  await _savePdf(pdf, 'Staff_Report');
+  print('Staff PDF download started');
 }

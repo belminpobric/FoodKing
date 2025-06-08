@@ -6,7 +6,8 @@ import 'package:foodking_admin/providers/base_provider.dart';
 class OrderProvider extends BaseProvider {
   OrderProvider() : super("Order");
 
-  Future<dynamic> getOrders({bool? isAccepted, int? idGTE}) async {
+  Future<dynamic> getOrders(
+      {bool? isAccepted, int? idGTE, bool? sortByCreatedAtDesc}) async {
     final queryParams = <String, dynamic>{};
 
     if (isAccepted != null) {
@@ -15,6 +16,11 @@ class OrderProvider extends BaseProvider {
 
     if (idGTE != null) {
       queryParams['IdGTE'] = idGTE.toString();
+    }
+
+    if (sortByCreatedAtDesc != null) {
+      queryParams['SortByCreatedAtDesc'] =
+          sortByCreatedAtDesc.toString().toLowerCase();
     }
 
     return super.get(queryParams: queryParams);

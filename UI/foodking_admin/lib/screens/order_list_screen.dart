@@ -48,15 +48,25 @@ class _OrderListScreenState extends State<OrderListScreen> {
         searchId = int.tryParse(_searchController.text);
       }
 
+      bool? sortByCreatedAtDesc;
+      if (_selectedSortOrder == 'Najnovije') {
+        sortByCreatedAtDesc = true;
+      } else if (_selectedSortOrder == 'Najstarije') {
+        sortByCreatedAtDesc = false;
+      }
+
       final data = await _orderProvider.getOrders(
         isAccepted: _showAcceptedOrders,
         idGTE: searchId,
+        sortByCreatedAtDesc: sortByCreatedAtDesc,
       );
 
       setState(() {
         final List<dynamic> ordersJson = data['result'] ?? [];
         _orders = ordersJson.map((json) => Order.fromJson(json)).toList();
-        _applySorting();
+        if (_selectedSortBy != null) {
+          _applySorting();
+        }
         _isLoading = false;
       });
     } catch (e) {
@@ -75,7 +85,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
   }
 
   void _applySorting() {
-    if (_selectedSortBy == null) return;
+    if (_selectedSortBy == null && _selectedSortOrder == null) return;
 
     switch (_selectedSortBy) {
       case 'Najveca cijena':
@@ -84,7 +94,17 @@ class _OrderListScreenState extends State<OrderListScreen> {
       case 'Najniza cijena':
         _orders.sort((a, b) => (a.price ?? 0).compareTo(b.price ?? 0));
         break;
-      // TODO: implement time sorting when its added to BE
+    }
+    // Time sorting
+    switch (_selectedSortOrder) {
+      case 'Najnovije':
+        _orders.sort((a, b) =>
+            (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)));
+        break;
+      case 'Najstarije':
+        _orders.sort((a, b) =>
+            (a.createdAt ?? DateTime(0)).compareTo(b.createdAt ?? DateTime(0)));
+        break;
     }
   }
 
@@ -265,6 +285,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                             setState(() {
                               _selectedSortOrder = newValue;
                             });
+                            _loadOrders();
                           }
                         },
                       ),

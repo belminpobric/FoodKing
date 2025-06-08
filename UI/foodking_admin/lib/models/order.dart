@@ -3,12 +3,16 @@ class Order {
   final double? price;
   final bool? isAccepted;
   final String? stateMachine;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   Order({
     this.id,
     this.price,
     this.isAccepted,
     this.stateMachine,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -17,6 +21,10 @@ class Order {
       price: json['price']?.toDouble(),
       isAccepted: json['isAccepted'],
       stateMachine: json['stateMachine'],
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );
   }
 
@@ -26,6 +34,8 @@ class Order {
       'price': price,
       'isAccepted': isAccepted,
       'stateMachine': stateMachine,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
     };
   }
 }
