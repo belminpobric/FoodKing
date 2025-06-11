@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../providers/basket_provider.dart';
 import 'checkout_screen.dart';
 
@@ -7,8 +8,8 @@ class BasketScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final basketState = BasketProvider.of(context);
-    final basket = basketState.basket;
+    final basketProvider = context.watch<BasketProvider>();
+    final basket = basketProvider.basket;
     // Group items by title and count quantity
     final Map<String, Map<String, dynamic>> grouped = {};
     for (var item in basket) {
@@ -52,7 +53,7 @@ class BasketScreen extends StatelessWidget {
                             // Remove all of this item from basket
                             for (int i = basket.length - 1; i >= 0; i--) {
                               if (basket[i]['title'] == item['title']) {
-                                basketState.removeFromBasket(basket[i]);
+                                basketProvider.removeFromBasket(basket[i]);
                               }
                             }
                           },

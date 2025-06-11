@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:foodking_admin/providers/OrderProvider.dart';
 import 'package:foodking_admin/screens/order_list_screen.dart';
-import 'package:foodking_admin/utils/util.dart';
+import 'package:foodking_admin/utils/auth.dart';
 import 'package:foodking_admin/widgets/foodKing_button.dart';
 import 'package:foodking_admin/widgets/foodKing_text_field.dart';
 
@@ -89,8 +89,8 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    Authorization.username = username;
-    Authorization.password = password;
+    Auth.username = username;
+    Auth.password = password;
     try {
       await _orderProvider.get();
       if (!mounted) return;

@@ -17,16 +17,16 @@ namespace FoodKing.Services
         {
             var filteredQuery = base.AddFilter(query, search);
 
-            filteredQuery = query.Where(x => x.SoftDelete == false || x.SoftDelete == null);
+            filteredQuery = filteredQuery.Where(x => x.SoftDelete == false || x.SoftDelete == null);
 
             if (!string.IsNullOrWhiteSpace(search?.FirstName))
             {
-                filteredQuery = query.Where(x => x.FirstName.StartsWith(search.FirstName));
+                filteredQuery = filteredQuery.Where(x => x.FirstName.StartsWith(search.FirstName));
             }
 
             if (!string.IsNullOrWhiteSpace(search?.LastName))
             {
-                filteredQuery = query.Where(x => x.LastName.StartsWith(search.LastName));
+                filteredQuery = filteredQuery.Where(x => x.LastName.StartsWith(search.LastName));
             }
 
             if (!string.IsNullOrWhiteSpace(search?.NameGTE))
@@ -40,19 +40,21 @@ namespace FoodKing.Services
 
             if (!string.IsNullOrWhiteSpace(search?.Email))
             {
-                filteredQuery = query.Where(x => x.Email.StartsWith(search.Email));
+                filteredQuery = filteredQuery.Where(x => x.Email.StartsWith(search.Email));
             }
+
             if (search?.SortByCreatedAtDesc == true)
             {
-                filteredQuery = query.OrderByDescending(x => x.CreatedAt);
-            } 
+                filteredQuery = filteredQuery.OrderByDescending(x => x.CreatedAt);
+            }
             else
             {
-                filteredQuery = query.OrderBy(x => x.CreatedAt);
+                filteredQuery = filteredQuery.OrderBy(x => x.CreatedAt);
             }
 
             return filteredQuery;
         }
+
         public async Task Delete(int id)
         {
             var entity = await _context.Customers.FindAsync(id);

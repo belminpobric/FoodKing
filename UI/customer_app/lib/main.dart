@@ -1,75 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'providers/basket_provider.dart';
+import 'providers/customer_provider.dart';
 import 'screens/home_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/orders_screen.dart';
+import 'screens/checkout_screen.dart';
+import 'screens/login_screen.dart';
+import 'widgets/global_app_bar.dart';
 
 void main() {
-  runApp(const BasketProvider(child: MyApp()));
-}
-
-class BasketProvider extends StatefulWidget {
-  final Widget child;
-  const BasketProvider({super.key, required this.child});
-
-  static _BasketProviderState of(BuildContext context) {
-    final _BasketProviderInherited? inherited =
-        context.dependOnInheritedWidgetOfExactType<_BasketProviderInherited>();
-    assert(inherited != null,
-        'BasketProvider.of() called with a context that does not contain a BasketProvider. Make sure your widget is a descendant of BasketProvider.');
-    return inherited!.data;
-  }
-
-  @override
-  State<BasketProvider> createState() => _BasketProviderState();
-}
-
-class _BasketProviderState extends State<BasketProvider> {
-  final List<Map<String, dynamic>> _basket = [];
-
-  List<Map<String, dynamic>> get basket => _basket;
-  int get basketCount => _basket.length;
-
-  @override
-  void initState() {
-    super.initState();
-    // Add 100 items when the app starts
-    for (int i = 0; i < 100; i++) {
-      _basket.add({
-        'title': 'Item ${i + 1}',
-        'ingredients': 'Ingredients for item ${i + 1}',
-        'price': (i + 1) * 1.0,
-        'rating': 4.0 + (i % 5) * 0.1,
-      });
-    }
-  }
-
-  void addToBasket(Map<String, dynamic> item) {
-    setState(() {
-      _basket.add(item);
-    });
-  }
-
-  void removeFromBasket(Map<String, dynamic> item) {
-    setState(() {
-      _basket.remove(item);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _BasketProviderInherited(
-      data: this,
-      child: widget.child,
-    );
-  }
-}
-
-class _BasketProviderInherited extends InheritedWidget {
-  final _BasketProviderState data;
-  const _BasketProviderInherited({required this.data, required Widget child})
-      : super(child: child);
-
-  @override
-  bool updateShouldNotify(_BasketProviderInherited oldWidget) => true;
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -77,17 +18,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'FoodKing',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-        scaffoldBackgroundColor: Colors.grey[100],
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.orange,
-          elevation: 0,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CustomerProvider()),
+        ChangeNotifierProvider(create: (_) => BasketProvider()),
+      ],
+      child: MaterialApp(
+        title: 'FoodKing',
+        theme: ThemeData(
+          primarySwatch: Colors.orange,
+          scaffoldBackgroundColor: Colors.grey[100],
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.orange,
+            elevation: 0,
+          ),
         ),
+        home: const LoginScreen(),
       ),
-      home: const HomeScreen(),
     );
   }
 }
@@ -162,7 +109,7 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final basketCount = BasketProvider.of(context).basketCount;
+    final basketCount = context.watch<BasketProvider>().basketCount;
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: Colors.white,
@@ -243,8 +190,8 @@ class BasketScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final basketState = BasketProvider.of(context);
-    final basket = basketState.basket;
+    final basketProvider = context.watch<BasketProvider>();
+    final basket = basketProvider.basket;
     // Group items by title and count quantity
     final Map<String, Map<String, dynamic>> grouped = {};
     for (var item in basket) {
@@ -295,7 +242,8 @@ class BasketScreen extends StatelessWidget {
                                         i >= 0;
                                         i--) {
                                       if (basket[i]['title'] == item['title']) {
-                                        basketState.removeFromBasket(basket[i]);
+                                        basketProvider
+                                            .removeFromBasket(basket[i]);
                                       }
                                     }
                                   },
@@ -346,11 +294,11 @@ class MenuScreen extends StatelessWidget {
               'price': (i + 1) * 1.0,
               'rating': 4.0 + (i % 5) * 0.1,
             });
-    final basketState = BasketProvider.of(context);
+    final basketProvider = context.watch<BasketProvider>();
 
     // Helper to get quantity in basket
     int getQuantity(Map<String, dynamic> item) {
-      return basketState.basket
+      return basketProvider.basket
           .where((e) => e['title'] == item['title'])
           .length;
     }
@@ -425,7 +373,7 @@ class MenuScreen extends StatelessWidget {
                             if (quantity == 0) ...[
                               OutlinedButton(
                                 onPressed: () {
-                                  basketState.addToBasket(item);
+                                  basketProvider.addToBasket(item);
                                 },
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: const Color(0xFF00B2A9),
@@ -450,11 +398,12 @@ class MenuScreen extends StatelessWidget {
                                         color: Color(0xFF00B2A9)),
                                     onPressed: () {
                                       // Remove one instance
-                                      final idx = basketState.basket.indexWhere(
-                                          (e) => e['title'] == item['title']);
+                                      final idx = basketProvider.basket
+                                          .indexWhere((e) =>
+                                              e['title'] == item['title']);
                                       if (idx != -1) {
-                                        basketState.removeFromBasket(
-                                            basketState.basket[idx]);
+                                        basketProvider.removeFromBasket(
+                                            basketProvider.basket[idx]);
                                       }
                                     },
                                   ),
@@ -466,7 +415,7 @@ class MenuScreen extends StatelessWidget {
                                     icon: const Icon(Icons.add,
                                         color: Color(0xFF00B2A9)),
                                     onPressed: () {
-                                      basketState.addToBasket(item);
+                                      basketProvider.addToBasket(item);
                                     },
                                   ),
                                 ],
@@ -541,10 +490,10 @@ class DailyOfferScreen extends StatelessWidget {
               'price': 5.0 + i,
               'rating': 4.0 + (i % 5) * 0.1,
             });
-    final basketState = BasketProvider.of(context);
+    final basketProvider = context.watch<BasketProvider>();
 
     int getQuantity(Map<String, dynamic> item) {
-      return basketState.basket
+      return basketProvider.basket
           .where((e) => e['title'] == item['title'])
           .length;
     }
@@ -592,7 +541,7 @@ class DailyOfferScreen extends StatelessWidget {
                       if (quantity == 0) ...[
                         OutlinedButton(
                           onPressed: () {
-                            basketState.addToBasket(item);
+                            basketProvider.addToBasket(item);
                           },
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.orange,
@@ -615,11 +564,11 @@ class DailyOfferScreen extends StatelessWidget {
                               icon: const Icon(Icons.remove,
                                   color: Colors.orange),
                               onPressed: () {
-                                final idx = basketState.basket.indexWhere(
+                                final idx = basketProvider.basket.indexWhere(
                                     (e) => e['title'] == item['title']);
                                 if (idx != -1) {
-                                  basketState.removeFromBasket(
-                                      basketState.basket[idx]);
+                                  basketProvider.removeFromBasket(
+                                      basketProvider.basket[idx]);
                                 }
                               },
                             ),
@@ -629,7 +578,7 @@ class DailyOfferScreen extends StatelessWidget {
                             IconButton(
                               icon: const Icon(Icons.add, color: Colors.orange),
                               onPressed: () {
-                                basketState.addToBasket(item);
+                                basketProvider.addToBasket(item);
                               },
                             ),
                           ],
@@ -751,114 +700,13 @@ class OrdersScreen extends StatelessWidget {
   }
 }
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              // TODO: Implement settings
-            },
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.orange,
-              child: Icon(Icons.person, size: 50, color: Colors.white),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'John Doe',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'john.doe@example.com',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 32),
-            _buildProfileItem(
-              context,
-              icon: Icons.history,
-              title: 'Order History',
-              onTap: () {
-                // TODO: Navigate to order history
-              },
-            ),
-            _buildProfileItem(
-              context,
-              icon: Icons.favorite,
-              title: 'Favorites',
-              onTap: () {
-                // TODO: Navigate to favorites
-              },
-            ),
-            _buildProfileItem(
-              context,
-              icon: Icons.location_on,
-              title: 'Delivery Addresses',
-              onTap: () {
-                // TODO: Navigate to addresses
-              },
-            ),
-            _buildProfileItem(
-              context,
-              icon: Icons.payment,
-              title: 'Payment Methods',
-              onTap: () {
-                // TODO: Navigate to payment methods
-              },
-            ),
-            _buildProfileItem(
-              context,
-              icon: Icons.logout,
-              title: 'Logout',
-              onTap: () {
-                // TODO: Implement logout
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProfileItem(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: Icon(icon, color: Colors.orange),
-        title: Text(title),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: onTap,
-      ),
-    );
-  }
-}
-
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final basketState = BasketProvider.of(context);
-    final basket = basketState.basket;
+    final basketProvider = context.watch<BasketProvider>();
+    final basket = basketProvider.basket;
     // Group items by title and count quantity
     final Map<String, Map<String, dynamic>> grouped = {};
     for (var item in basket) {
@@ -946,7 +794,7 @@ class CheckoutScreen extends StatelessWidget {
                             );
                             Navigator.of(context)
                                 .popUntil((route) => route.isFirst);
-                            basket.clear();
+                            basketProvider.clearBasket();
                           },
                     child: const Text('Place Order'),
                   ),

@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:foodking_admin/utils/auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import '../utils/auth.dart';
 
 abstract class BaseProvider with ChangeNotifier {
   static String? _baseUrl;

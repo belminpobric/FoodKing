@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../providers/basket_provider.dart';
 
 class CheckoutScreen extends StatelessWidget {
@@ -6,8 +7,8 @@ class CheckoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final basketState = BasketProvider.of(context);
-    final basket = basketState.basket;
+    final basketProvider = context.watch<BasketProvider>();
+    final basket = basketProvider.basket;
     // Group items by title and count quantity
     final Map<String, Map<String, dynamic>> grouped = {};
     for (var item in basket) {

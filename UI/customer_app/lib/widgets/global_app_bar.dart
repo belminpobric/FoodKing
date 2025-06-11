@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../providers/basket_provider.dart';
 import '../screens/basket_screen.dart';
 
@@ -9,7 +10,7 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final basketCount = BasketProvider.of(context).basketCount;
+    final basketCount = context.watch<BasketProvider>().basketCount;
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: Colors.white,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../providers/basket_provider.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -15,11 +16,11 @@ class MenuScreen extends StatelessWidget {
               'price': (i + 1) * 1.0,
               'rating': 4.0 + (i % 5) * 0.1,
             });
-    final basketState = BasketProvider.of(context);
+    final basketProvider = context.watch<BasketProvider>();
 
     // Helper to get quantity in basket
     int getQuantity(Map<String, dynamic> item) {
-      return basketState.basket
+      return basketProvider.basket
           .where((e) => e['title'] == item['title'])
           .length;
     }
@@ -94,7 +95,7 @@ class MenuScreen extends StatelessWidget {
                             if (quantity == 0) ...[
                               OutlinedButton(
                                 onPressed: () {
-                                  basketState.addToBasket(item);
+                                  basketProvider.addToBasket(item);
                                 },
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: const Color(0xFF00B2A9),
@@ -119,11 +120,12 @@ class MenuScreen extends StatelessWidget {
                                         color: Color(0xFF00B2A9)),
                                     onPressed: () {
                                       // Remove one instance
-                                      final idx = basketState.basket.indexWhere(
-                                          (e) => e['title'] == item['title']);
+                                      final idx = basketProvider.basket
+                                          .indexWhere((e) =>
+                                              e['title'] == item['title']);
                                       if (idx != -1) {
-                                        basketState.removeFromBasket(
-                                            basketState.basket[idx]);
+                                        basketProvider.removeFromBasket(
+                                            basketProvider.basket[idx]);
                                       }
                                     },
                                   ),
@@ -135,7 +137,7 @@ class MenuScreen extends StatelessWidget {
                                     icon: const Icon(Icons.add,
                                         color: Color(0xFF00B2A9)),
                                     onPressed: () {
-                                      basketState.addToBasket(item);
+                                      basketProvider.addToBasket(item);
                                     },
                                   ),
                                 ],

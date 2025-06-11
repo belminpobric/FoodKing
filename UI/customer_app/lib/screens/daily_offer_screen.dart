@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../providers/basket_provider.dart';
 
 class DailyOfferScreen extends StatelessWidget {
@@ -15,10 +16,10 @@ class DailyOfferScreen extends StatelessWidget {
               'price': 5.0 + i,
               'rating': 4.0 + (i % 5) * 0.1,
             });
-    final basketState = BasketProvider.of(context);
+    final basketProvider = context.watch<BasketProvider>();
 
     int getQuantity(Map<String, dynamic> item) {
-      return basketState.basket
+      return basketProvider.basket
           .where((e) => e['title'] == item['title'])
           .length;
     }
@@ -66,7 +67,7 @@ class DailyOfferScreen extends StatelessWidget {
                       if (quantity == 0) ...[
                         OutlinedButton(
                           onPressed: () {
-                            basketState.addToBasket(item);
+                            basketProvider.addToBasket(item);
                           },
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.orange,
@@ -89,11 +90,11 @@ class DailyOfferScreen extends StatelessWidget {
                               icon: const Icon(Icons.remove,
                                   color: Colors.orange),
                               onPressed: () {
-                                final idx = basketState.basket.indexWhere(
+                                final idx = basketProvider.basket.indexWhere(
                                     (e) => e['title'] == item['title']);
                                 if (idx != -1) {
-                                  basketState.removeFromBasket(
-                                      basketState.basket[idx]);
+                                  basketProvider.removeFromBasket(
+                                      basketProvider.basket[idx]);
                                 }
                               },
                             ),
@@ -103,7 +104,7 @@ class DailyOfferScreen extends StatelessWidget {
                             IconButton(
                               icon: const Icon(Icons.add, color: Colors.orange),
                               onPressed: () {
-                                basketState.addToBasket(item);
+                                basketProvider.addToBasket(item);
                               },
                             ),
                           ],
