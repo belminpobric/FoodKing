@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:foodking_admin/utils/auth.dart';
 import 'package:foodking_admin/utils/util.dart';
 import 'package:http/http.dart';
 import 'package:foodking_admin/providers/base_provider.dart';
@@ -39,8 +40,8 @@ class OrderProvider extends BaseProvider {
 
   @override
   Map<String, String> createHeaders() {
-    String username = Authorization.username ?? "";
-    String password = Authorization.password ?? "";
+    String username = Auth.username ?? "admin";
+    String password = Auth.password ?? "admin";
 
     print("$username, $password");
     String basicAuth =
