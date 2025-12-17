@@ -36,6 +36,70 @@ namespace FoodKing.DbSeed
             dbContext.Products.Add(product2);
             await dbContext.SaveChangesAsync();
 
+            var passwordAdmin = ComputeHash("admin123");
+            var passwordStaff = ComputeHash("staff123");
+            var passwordCustomer = ComputeHash("customer123");
+
+            var userAdmin = new User
+            {
+                FirstName = "Admin",
+                LastName = "Admin",
+                Password = passwordAdmin,
+                UserName = "admin",
+                PhoneNumber = "000-000-000",
+                Email = "admin@admin.com",
+                Address = "Admin Address",
+                CurrentAddress = "current address",
+                Photo = "pijas"
+            };
+            var userCustomer = new User
+            {
+                FirstName = "customer",
+                LastName = "customer",
+                Password = passwordCustomer,
+                UserName = "customer",
+                PhoneNumber = "000-000-000",
+                Email = "customer@customer.com",
+                Address = "Customer Address",
+                CurrentAddress = "current address",
+                Photo = "pijas"
+            };
+            var userStaff = new User
+            {
+                FirstName = "Staff",
+                LastName = "Staff",
+                Password = passwordStaff,
+                UserName = "staff",
+                PhoneNumber = "000-000-000",
+                Email = "staff@staff.com",
+                Address = "Staff Address",
+                CurrentAddress = "current address",
+                Photo = "pijas"
+            };
+            dbContext.Users.Add(userAdmin);
+            dbContext.Users.Add(userCustomer);
+            dbContext.Users.Add(userStaff);
+            await dbContext.SaveChangesAsync();
+
+
+            var roles = new List<Role>
+            {
+                new Role { Name = "Administrator" },
+                new Role { Name = "Staff" },
+                new Role { Name = "Customer" }
+            };
+            dbContext.Roles.AddRange(roles);
+
+
+            var userRole = new UserHasRole
+            {
+                User = userAdmin,
+                Role = roles.First(r => r.Name == "Administrator")
+            };
+            dbContext.UserHasRoles.Add(userRole);
+
+            await dbContext.SaveChangesAsync();
+
             var customer1 = new Customer
             {
                 FirstName = "John",
@@ -44,6 +108,8 @@ namespace FoodKing.DbSeed
                 Email = "john.doe@email.com",
                 Username = "johndoe",
                 Address = "Main Street 1",
+                UserId = userCustomer.Id,
+                User = userCustomer,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
@@ -52,6 +118,8 @@ namespace FoodKing.DbSeed
                 FirstName = "Jane",
                 LastName = "Smith",
                 PhoneNumber = "987654321",
+                UserId = userCustomer.Id,
+                User = userCustomer,
                 Email = "jane.smith@email.com",
                 Username = "janesmith",
                 Address = "Second Street 5",
@@ -62,6 +130,56 @@ namespace FoodKing.DbSeed
             dbContext.Customers.Add(customer2);
             await dbContext.SaveChangesAsync();
 
+
+            var customerRoles = new List<UserHasRole>
+            {
+                new UserHasRole
+                {
+                    User = userCustomer,
+                    Role = roles.First(r => r.Name == "Customer")
+                },
+            };
+            dbContext.UserHasRoles.AddRange(customerRoles);
+
+            await dbContext.SaveChangesAsync();
+
+            var staff1 = new Staff
+            {
+                FirstName = "Stafff",
+                LastName = "Doe",
+                PhoneNumber = "123456789",
+                Email = "john.doe@email.com",
+                UserId = userStaff.Id,
+                User = userStaff,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+            var staff2 = new Staff
+            {
+                FirstName = "Staff",
+                LastName = "Smith",
+                PhoneNumber = "987654321",
+                UserId = userStaff.Id,
+                User = userStaff,
+                Email = "jane.smith@email.com",
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+            dbContext.Staff.Add(staff1);
+            dbContext.Staff.Add(staff2);
+            await dbContext.SaveChangesAsync();
+
+            var staffRoles = new List<UserHasRole>
+            {
+                new UserHasRole
+                {
+                    User = userStaff,
+                    Role = roles.First(r => r.Name == "Staff")
+                },
+            };
+            dbContext.UserHasRoles.AddRange(staffRoles);
+
+            await dbContext.SaveChangesAsync();
 
             var orderDetail1 = new OrderDetail
             {
@@ -143,40 +261,6 @@ namespace FoodKing.DbSeed
 
             dbContext.PaymentDetails.Add(paymentDetail1);
             dbContext.PaymentDetails.Add(paymentDetail2);
-            await dbContext.SaveChangesAsync();
-
-            var password = ComputeHash("admin");
-
-            var user = new User
-            {
-                FirstName = "Admin",
-                LastName = "Admin",
-                Password = password,
-                UserName = "admin",
-                PhoneNumber = "000-000-000",
-                Email = "admin@admin.com",
-                Address = "Admin Address",
-                CurrentAddress = "current address",
-                Photo = "pijas"
-            };
-            dbContext.Users.Add(user);
-            await dbContext.SaveChangesAsync();
-
-
-            var role = new Role
-            {
-                Name = "Administrator"
-            };
-            dbContext.Roles.Add(role);
-
-
-            var userRole = new UserHasRole
-            {
-                User = user,
-                Role = role
-            };
-            dbContext.UserHasRoles.Add(userRole);
-
             await dbContext.SaveChangesAsync();
         }
 

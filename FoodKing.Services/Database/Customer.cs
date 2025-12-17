@@ -19,6 +19,7 @@ public partial class Customer
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
     public string Email { get; set; } = null!;
     public bool? SoftDelete { get; set; }
-
+    public int? UserId { get; set; }
+    public virtual User? User { get; set; }
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 }

@@ -18,5 +18,7 @@ namespace FoodKing.Model
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public string Email { get; set; } = null!;
+        public int? UserId { get; set; }
+        public virtual User? User { get; set; }
     }
 }

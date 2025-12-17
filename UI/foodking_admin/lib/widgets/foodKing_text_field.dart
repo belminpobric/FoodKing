@@ -7,6 +7,8 @@ class FoodKingTextField extends StatelessWidget {
   final bool isPassword;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
+  final TextInputAction? textInputAction;
+  final void Function(String)? onSubmitted;
 
   const FoodKingTextField({
     super.key,
@@ -16,6 +18,8 @@ class FoodKingTextField extends StatelessWidget {
     this.isPassword = false,
     this.validator,
     this.suffixIcon,
+    this.textInputAction,
+    this.onSubmitted,
   });
 
   @override
@@ -41,6 +45,8 @@ class FoodKingTextField extends StatelessWidget {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
+      textInputAction: textInputAction,
+      onSubmitted: onSubmitted,
     );
   }
 }

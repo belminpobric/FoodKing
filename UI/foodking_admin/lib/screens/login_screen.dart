@@ -61,6 +61,9 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         },
                       ),
+                      textInputAction:
+                          TextInputAction.done, // Enter triggers done
+                      onSubmitted: (_) => _handleLogin(),
                     ),
                     const SizedBox(
                       height: 16,

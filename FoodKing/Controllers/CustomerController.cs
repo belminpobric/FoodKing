@@ -2,12 +2,14 @@
 using FoodKing.Model.Requests;
 using FoodKing.Model.SearchObjects;
 using FoodKing.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodKing.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "Customer")]
     public class CustomerController : BaseCRUDController<Customer, CustomerSearchObject, CustomerInsertRequest, CustomerUpdateRequest>
     {
         private readonly ICustomerService _service;
