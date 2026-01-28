@@ -41,6 +41,7 @@ builder.Services.AddTransient<FinishedOrderState>();
 builder.Services.AddTransient<InitialOrderState>();
 builder.Services.AddTransient<InProgressOrderState>();
 builder.Services.AddTransient<UpdatedOrderState>();
+builder.Services.AddTransient<DraftOrderState>();
 
 // Add controllers with global filters
 builder.Services.AddControllers(x =>

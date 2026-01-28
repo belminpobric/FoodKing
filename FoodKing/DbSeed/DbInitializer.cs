@@ -216,7 +216,7 @@ namespace FoodKing.DbSeed
             {
                 Price = 18.50m,
                 IsAccepted = false,
-                StateMachine = "Initial",
+                StateMachine = "Draft",
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };

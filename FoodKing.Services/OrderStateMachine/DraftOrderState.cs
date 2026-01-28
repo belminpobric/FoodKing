@@ -57,6 +57,7 @@ namespace FoodKing.Services.OrderStateMachine
             _logger.LogInformation($"Order {id} is accepted.");
 
             entity.StateMachine = "Accepted";
+            entity.IsAccepted = true;
             await _context.SaveChangesAsync();
 
             var mappedEntity = _mapper.Map<Model.Order>(entity);

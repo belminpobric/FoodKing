@@ -77,6 +77,8 @@ namespace FoodKing.Services.OrderStateMachine
                     return _serviceProvider.GetService<CanceledOrderState>();
                 case "Updated":
                     return _serviceProvider.GetService<UpdatedOrderState>();
+                case "Draft":
+                    return _serviceProvider.GetService<DraftOrderState>();
                 default:
                     throw new UserException("Not allowed");
             }
