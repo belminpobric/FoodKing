@@ -27,6 +27,10 @@ class OrderProvider extends BaseProvider {
     return super.get(queryParams: queryParams);
   }
 
+  Future<dynamic> acceptOrder(int orderId) async {
+    return super.putToPath("$endpoint/$orderId/accept");
+  }
+
   @override
   bool isValidResponse(Response response) {
     if (response.statusCode < 299) {

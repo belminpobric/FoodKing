@@ -58,6 +58,46 @@ abstract class BaseProvider with ChangeNotifier {
     }
   }
 
+  Future<dynamic> postToPath(String path, {Map<String, dynamic>? body}) async {
+    var url = "$_baseUrl$path";
+
+    print("Request URL: $url"); // Debug print
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.post(uri,
+        headers: headers, body: body != null ? jsonEncode(body) : null);
+    print("Response status: ${response.statusCode}"); // Debug print
+    print("Response body: ${response.body}"); // Debug print
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
+
+  Future<dynamic> putToPath(String path, {Map<String, dynamic>? body}) async {
+    var url = "$_baseUrl$path";
+
+    print("Request URL: $url"); // Debug print
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.put(uri,
+        headers: headers, body: body != null ? jsonEncode(body) : null);
+    print("Response status: ${response.statusCode}"); // Debug print
+    print("Response body: ${response.body}"); // Debug print
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
+
   bool isValidResponse(Response response) {
     if (response.statusCode < 299) {
       return true;

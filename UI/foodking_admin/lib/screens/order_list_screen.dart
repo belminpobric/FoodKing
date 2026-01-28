@@ -335,8 +335,31 @@ class _OrderListScreenState extends State<OrderListScreen> {
                                     );
                                   },
                                   accepted: order.isAccepted ?? false,
-                                  onAccept: () {
-                                    // TODO: Implement accept order functionality
+                                  onAccept: () async {
+                                    try {
+                                      await _orderProvider
+                                          .acceptOrder(order.id ?? 0);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Narudžba prihvaćena!'),
+                                          backgroundColor: Colors.green,
+                                        ),
+                                      );
+                                      // Show accepted orders after accepting
+                                      setState(() {
+                                        _showAcceptedOrders = true;
+                                      });
+                                      _loadOrders();
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text('Greška: $e'),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
                                   },
                                   onReject: () {
                                     // TODO: Implement reject order functionality
