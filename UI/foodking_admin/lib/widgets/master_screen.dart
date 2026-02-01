@@ -71,10 +71,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               ListTile(
                 leading: const Icon(Icons.logout),
                 title: const Text('Logout'),
-                onTap: () {
+                onTap: () async {
                   // Clear stored credentials
-                  Auth.username = '';
-                  Auth.password = '';
+                  await Auth.clearCredentials();
 
                   // Navigate to LoginPage and remove all previous routes
                   Navigator.of(context).pushAndRemoveUntil(

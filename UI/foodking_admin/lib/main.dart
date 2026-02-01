@@ -4,6 +4,8 @@ import 'package:foodking_admin/providers/OrderProvider.dart';
 import 'package:foodking_admin/providers/CustomerProvider.dart';
 import 'package:foodking_admin/providers/StaffProvider.dart';
 import 'package:foodking_admin/screens/login_screen.dart';
+import 'package:foodking_admin/screens/order_list_screen.dart';
+import 'package:foodking_admin/utils/auth.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -120,6 +122,41 @@ class LayoutExamples extends StatelessWidget {
   }
 }
 
+class AuthGate extends StatefulWidget {
+  const AuthGate({super.key});
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  bool _loading = true;
+  bool _hasCreds = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkCreds();
+  }
+
+  Future<void> _checkCreds() async {
+    final ok = await Auth.loadCredentials();
+    if (!mounted) return;
+    setState(() {
+      _hasCreds = ok;
+      _loading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    return _hasCreds ? const OrderListScreen() : const LoginPage();
+  }
+}
+
 class MyMaterialApp extends StatelessWidget {
   const MyMaterialApp({super.key});
 
@@ -128,6 +165,6 @@ class MyMaterialApp extends StatelessWidget {
     return MaterialApp(
         title: "FoodKing Material App",
         theme: ThemeData(primarySwatch: Colors.deepOrange),
-        home: const LoginPage());
+        home: const AuthGate());
   }
 }

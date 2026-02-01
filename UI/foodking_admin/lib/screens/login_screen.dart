@@ -96,6 +96,8 @@ class _LoginPageState extends State<LoginPage> {
     Auth.password = password;
     try {
       await _orderProvider.get();
+      // Persist credentials so a page refresh won't return to login
+      await Auth.saveCredentials(username, password);
       if (!mounted) return;
 
       Navigator.of(context).pushReplacement(
