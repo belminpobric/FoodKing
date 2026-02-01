@@ -26,7 +26,7 @@ namespace FoodKing.Services
 
             if (search.IsAccepted.HasValue)
             {
-                filteredQuery = query.Where(x => x.IsAccepted == search.IsAccepted);
+                filteredQuery = filteredQuery.Where(x => x.IsAccepted == search.IsAccepted);
             }
 
             if (!string.IsNullOrWhiteSpace(search?.IdGTE) && search.IdGTE.All(char.IsDigit))
@@ -39,11 +39,11 @@ namespace FoodKing.Services
              
             if (search?.SortByCreatedAtDesc == true)
             {
-                filteredQuery = query.OrderByDescending(x => x.CreatedAt);
+                filteredQuery = filteredQuery.OrderByDescending(x => x.CreatedAt);
             }
             else
             {
-                filteredQuery = query.OrderBy(x => x.CreatedAt);
+                filteredQuery = filteredQuery.OrderBy(x => x.CreatedAt);
             }
 
             return filteredQuery;
