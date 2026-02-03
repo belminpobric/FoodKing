@@ -33,6 +33,10 @@ class CustomerDetailsScreen extends StatelessWidget {
           children: [
             Row(
               children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
                 Image.asset(
                   'assets/images/logo.png',
                   height: 48,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodking_admin/screens/login_screen.dart';
 import 'package:foodking_admin/screens/menu_list_screen.dart';
-import 'package:foodking_admin/screens/staff_list_screen.dart';
+import 'package:foodking_admin/screens/user_list_screen.dart';
 import 'package:foodking_admin/utils/auth.dart';
 import '../screens/order_list_screen.dart';
 import '../screens/customer_list_screen.dart';
@@ -58,11 +58,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               ),
               ListTile(
                 leading: const Icon(Icons.group),
-                title: const Text('Staff'),
+                title: const Text('User'),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const StaffListScreen(),
+                      builder: (context) => const UserListScreen(),
                     ),
                   );
                 },

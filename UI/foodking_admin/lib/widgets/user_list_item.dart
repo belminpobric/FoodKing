@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class StaffDetails {
+class UserDetails {
   final String? firstName;
   final String? lastName;
   final String? phoneNumber;
@@ -8,7 +8,7 @@ class StaffDetails {
   final String? createdAt;
   final String? updatedAt;
 
-  StaffDetails({
+  UserDetails({
     required this.firstName,
     required this.lastName,
     required this.phoneNumber,
@@ -18,10 +18,10 @@ class StaffDetails {
   });
 }
 
-class StaffListItem extends StatelessWidget {
+class UserListItem extends StatelessWidget {
   final String text;
 
-  const StaffListItem({
+  const UserListItem({
     super.key,
     required this.text,
   });

@@ -1,4 +1,4 @@
-import 'package:foodking_admin/models/staff.dart';
+import 'package:foodking_admin/models/User.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'dart:typed_data';
@@ -116,15 +116,15 @@ Future<void> generateMenusPdf(List<Menu> menus,
   print('Menu PDF download started');
 }
 
-Future<void> generateStaffsPdf(List<Staff> staffs,
+Future<void> generateUsersPdf(List<User> Users,
     {void Function()? onStart}) async {
   onStart?.call();
-  print('Starting Staff PDF generation...');
+  print('Starting User PDF generation...');
   final pdf = pw.Document();
   pdf.addPage(
     pw.MultiPage(
       build: (context) => [
-        pw.Header(level: 0, child: pw.Text('Staff Report')),
+        pw.Header(level: 0, child: pw.Text('User Report')),
         pw.Table.fromTextArray(
           headers: [
             'ID',
@@ -135,23 +135,21 @@ Future<void> generateStaffsPdf(List<Staff> staffs,
             'Created At',
             'Updated At'
           ],
-          data: staffs
-              .map((m) => [
-                    m.id?.toString() ?? '',
-                    m.firstName ?? '',
-                    m.lastName ?? '',
-                    m.phoneNumber ?? '',
-                    m.email ?? '',
-                    m.createdAt ?? '',
-                    m.updatedAt ?? '',
-                  ])
-              .toList(),
+          data: Users.map((m) => [
+                m.id?.toString() ?? '',
+                m.firstName ?? '',
+                m.lastName ?? '',
+                m.phoneNumber ?? '',
+                m.email ?? '',
+                m.createdAt ?? '',
+                m.updatedAt ?? '',
+              ]).toList(),
         ),
       ],
     ),
   );
-  await _savePdf(pdf, 'Staff_Report');
-  print('Staff PDF download started');
+  await _savePdf(pdf, 'User_Report');
+  print('User PDF download started');
 }
 
 Future<void> generateSingleOrderPdf(Order order,

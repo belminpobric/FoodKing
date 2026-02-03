@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:foodking_admin/providers/StaffProvider.dart';
-import 'package:foodking_admin/screens/staff_insert_screen.dart';
+import 'package:foodking_admin/providers/UserProvider.dart';
+import 'package:foodking_admin/screens/user_insert_screen.dart';
 import 'package:foodking_admin/widgets/master_screen.dart';
 import 'package:foodking_admin/widgets/foodKing_text_field.dart';
-import 'package:foodking_admin/widgets/staff_list_item.dart';
+import 'package:foodking_admin/widgets/User_list_item.dart';
 import 'package:provider/provider.dart';
-import 'package:foodking_admin/models/staff.dart';
+import 'package:foodking_admin/models/User.dart';
 import 'package:foodking_admin/utils/pdf_utils.dart';
 
-class StaffListScreen extends StatefulWidget {
-  const StaffListScreen({super.key});
+class UserListScreen extends StatefulWidget {
+  const UserListScreen({super.key});
 
   @override
-  State<StaffListScreen> createState() => _StaffListScreenState();
+  State<UserListScreen> createState() => _UserListScreenState();
 }
 
-class _StaffListScreenState extends State<StaffListScreen> {
-  late StaffProvider _staffProvider;
-  List<Staff> _staffs = [];
+class _UserListScreenState extends State<UserListScreen> {
+  late UserProvider _UserProvider;
+  List<User> _Users = [];
   bool _isLoading = true;
   String? _selectedSortBy;
   String? _selectedSortOrder;
@@ -32,24 +32,24 @@ class _StaffListScreenState extends State<StaffListScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _staffProvider = context.read<StaffProvider>();
-    _loadStaffs();
+    _UserProvider = context.read<UserProvider>();
+    _loadUsers();
   }
 
-  Future<void> _loadStaffs() async {
+  Future<void> _loadUsers() async {
     try {
       setState(() {
         _isLoading = true;
       });
 
-      final data = await _staffProvider.getStaffs(
+      final data = await _UserProvider.getUsers(
         searchString:
             _searchController.text.isNotEmpty ? _searchController.text : null,
       );
 
       setState(() {
-        final List<dynamic> staffsJson = data['result'] ?? [];
-        _staffs = staffsJson.map((json) => Staff.fromJson(json)).toList();
+        final List<dynamic> UsersJson = data['result'] ?? [];
+        _Users = UsersJson.map((json) => User.fromJson(json)).toList();
         _applySorting();
         _isLoading = false;
       });
@@ -57,7 +57,7 @@ class _StaffListScreenState extends State<StaffListScreen> {
       setState(() {
         _isLoading = false;
       });
-      print('Error loading staffs: $e');
+      print('Error loading Users: $e');
     }
   }
 
@@ -66,12 +66,10 @@ class _StaffListScreenState extends State<StaffListScreen> {
 
     switch (_selectedSortBy) {
       case 'Naziv A-Ž':
-        _staffs
-            .sort((a, b) => (a.firstName ?? '').compareTo(b.firstName ?? ''));
+        _Users.sort((a, b) => (a.firstName ?? '').compareTo(b.firstName ?? ''));
         break;
       case 'Naziv Ž-A':
-        _staffs
-            .sort((a, b) => (b.firstName ?? '').compareTo(a.firstName ?? ''));
+        _Users.sort((a, b) => (b.firstName ?? '').compareTo(a.firstName ?? ''));
         break;
     }
   }
@@ -81,7 +79,7 @@ class _StaffListScreenState extends State<StaffListScreen> {
       _selectedSortBy = null;
       _selectedSortOrder = null;
       _searchController.clear();
-      _loadStaffs();
+      _loadUsers();
     });
   }
 
@@ -107,13 +105,13 @@ class _StaffListScreenState extends State<StaffListScreen> {
                     SizedBox(
                       width: 300,
                       child: FoodKingTextField(
-                        labelText: 'Pretraga osoblja',
+                        labelText: 'Pretraga korisnika',
                         controller: _searchController,
                       ),
                     ),
                     const SizedBox(width: 16),
                     ElevatedButton(
-                      onPressed: _loadStaffs,
+                      onPressed: _loadUsers,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.blue,
@@ -136,8 +134,8 @@ class _StaffListScreenState extends State<StaffListScreen> {
                         duration: Duration(seconds: 2),
                       ),
                     );
-                    await generateStaffsPdf(
-                      _staffs,
+                    await generateUsersPdf(
+                      _Users,
                       onStart: () {},
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -168,10 +166,10 @@ class _StaffListScreenState extends State<StaffListScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        // TODO: Implement staff insert
+                        // TODO: Implement User insert
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => StaffInsertScreen(),
+                            builder: (context) => UserInsertScreen(),
                           ),
                         );
                       },
@@ -184,7 +182,7 @@ class _StaffListScreenState extends State<StaffListScreen> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
-                      child: const Text('Dodaj osoblje'),
+                      child: const Text('Dodaj korisnika'),
                     ),
                   ],
                 )
@@ -195,7 +193,7 @@ class _StaffListScreenState extends State<StaffListScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Lista osoblja",
+                  "Lista korisnika",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -239,7 +237,7 @@ class _StaffListScreenState extends State<StaffListScreen> {
                     ),
                     const SizedBox(width: 16),
                     IconButton(
-                      onPressed: _loadStaffs,
+                      onPressed: _loadUsers,
                       icon: const Icon(Icons.refresh),
                       tooltip: 'Osvježi listu',
                     ),
@@ -264,15 +262,15 @@ class _StaffListScreenState extends State<StaffListScreen> {
                   borderRadius: BorderRadius.circular(8),
                   child: _isLoading
                       ? const Center(child: CircularProgressIndicator())
-                      : _staffs.isEmpty
-                          ? const Center(child: Text('Nema osoblja'))
+                      : _Users.isEmpty
+                          ? const Center(child: Text('Nema korisnika'))
                           : ListView.builder(
-                              itemCount: _staffs.length,
+                              itemCount: _Users.length,
                               itemBuilder: (context, index) {
-                                final staff = _staffs[index];
-                                return StaffListItem(
+                                final User = _Users[index];
+                                return UserListItem(
                                   text:
-                                      "${staff.firstName ?? ''} ${staff.lastName ?? ''} (${staff.email ?? ''}) ${staff.phoneNumber ?? ''}",
+                                      "${User.firstName ?? ''} ${User.lastName ?? ''} (${User.email ?? ''}) ${User.phoneNumber ?? ''}",
                                 );
                               },
                             ),
@@ -282,7 +280,7 @@ class _StaffListScreenState extends State<StaffListScreen> {
           ],
         ),
       ),
-      appBarTitle: "Lista osoblja",
+      appBarTitle: "Lista korisnika",
     );
   }
 }

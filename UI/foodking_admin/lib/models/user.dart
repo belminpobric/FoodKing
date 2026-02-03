@@ -1,4 +1,4 @@
-class Staff {
+class User {
   final int? id;
   final String? firstName;
   final String? lastName;
@@ -7,7 +7,7 @@ class Staff {
   final String? createdAt;
   final String? updatedAt;
 
-  Staff(
+  User(
       {this.id,
       this.firstName,
       this.lastName,
@@ -16,8 +16,8 @@ class Staff {
       this.createdAt,
       this.updatedAt});
 
-  factory Staff.fromJson(Map<String, dynamic> json) {
-    return Staff(
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
         id: json['id'],
         firstName: json['firstName'],
         lastName: json['lastName'],
