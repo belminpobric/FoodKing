@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:foodking_admin/providers/UserProvider.dart';
+import 'package:foodking_admin/providers/base_provider.dart';
 import 'package:foodking_admin/providers/RoleProvider.dart';
 import 'package:foodking_admin/screens/user_list_screen.dart';
 import 'package:file_picker/file_picker.dart';
@@ -23,8 +24,14 @@ class _UserInsertScreenState extends State<UserInsertScreen> {
   String _lastName = '';
   String _phoneNumber = '';
   String _email = '';
+  String _address = '';
+  String _currentAddress = '';
+  String _userName = '';
+  String _password = '';
   String? _photoBase64;
   String? _photoFileName;
+
+  Map<String, dynamic> _fieldErrors = {};
 
   List<dynamic> _roles = [];
   dynamic _selectedRole;
@@ -45,6 +52,10 @@ class _UserInsertScreenState extends State<UserInsertScreen> {
         'LastName': _lastName,
         'PhoneNumber': _phoneNumber,
         'Email': _email,
+        'Address': _address,
+        'CurrentAddress': _currentAddress,
+        'UserName': _userName,
+        'Password': _password,
         if (_photoBase64 != null) 'Photo': _photoBase64,
         if (_selectedRole != null)
           'RoleId':
@@ -53,6 +64,7 @@ class _UserInsertScreenState extends State<UserInsertScreen> {
       try {
         final data = await _UserProvider.insertUser(requestBody);
 
+        setState(() => _fieldErrors = {});
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Osoblje uspjesno dodano!')),
         );
@@ -63,11 +75,33 @@ class _UserInsertScreenState extends State<UserInsertScreen> {
           ),
         );
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Greška: ${e.toString()}')),
-        );
+        if (e is ValidationException) {
+          setState(() {
+            // server returns { ..., "errors": { "Field": ["msg"] } }
+            final parsed = e.errors;
+            _fieldErrors = parsed is Map<String, dynamic>
+                ? parsed
+                : (parsed['errors'] ?? parsed['Errors'] ?? {}) as Map<String, dynamic>;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Validation errors occurred')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Greška: ${e.toString()}')),
+          );
+        }
       }
     }
+  }
+
+  String? _firstFieldError(String key) {
+    if (_fieldErrors.containsKey(key)) {
+      final v = _fieldErrors[key];
+      if (v is List && v.isNotEmpty) return v.first.toString();
+      return v.toString();
+    }
+    return null;
   }
 
   Future<void> _pickPhoto() async {
@@ -156,9 +190,60 @@ class _UserInsertScreenState extends State<UserInsertScreen> {
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Email'),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Upisite email' : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Upisite email';
+                  final serverErr = _firstFieldError('Email');
+                  if (serverErr != null) return serverErr;
+                  return null;
+                },
                 onSaved: (value) => _email = value!,
+                cursorColor: Colors.black,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Adresa'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Upisite adresu';
+                  final serverErr = _firstFieldError('Address');
+                  if (serverErr != null) return serverErr;
+                  return null;
+                },
+                onSaved: (value) => _address = value!,
+                cursorColor: Colors.black,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Trenutna adresa'),
+                validator: (value) {
+                  if (value == null || value.isEmpty)
+                    return 'Upisite trenutnu adresu';
+                  final serverErr = _firstFieldError('CurrentAddress');
+                  if (serverErr != null) return serverErr;
+                  return null;
+                },
+                onSaved: (value) => _currentAddress = value!,
+                cursorColor: Colors.black,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Korisničko ime'),
+                validator: (value) {
+                  if (value == null || value.isEmpty)
+                    return 'Upisite korisničko ime';
+                  final serverErr = _firstFieldError('UserName');
+                  if (serverErr != null) return serverErr;
+                  return null;
+                },
+                onSaved: (value) => _userName = value!,
+                cursorColor: Colors.black,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Lozinka'),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Upisite lozinku';
+                  final serverErr = _firstFieldError('Password');
+                  if (serverErr != null) return serverErr;
+                  return null;
+                },
+                onSaved: (value) => _password = value!,
                 cursorColor: Colors.black,
               ),
               SizedBox(height: 20),

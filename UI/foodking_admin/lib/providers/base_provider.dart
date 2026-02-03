@@ -4,6 +4,13 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
+class ValidationException implements Exception {
+  final dynamic errors;
+  ValidationException(this.errors);
+  @override
+  String toString() => 'ValidationException: $errors';
+}
+
 abstract class BaseProvider with ChangeNotifier {
   static String? _baseUrl;
   final String endpoint;
@@ -27,14 +34,22 @@ abstract class BaseProvider with ChangeNotifier {
     var headers = createHeaders();
 
     var response = await http.get(uri, headers: headers);
-    print("Response status: ${response.statusCode}"); // Debug print
-    print("Response body: ${response.body}"); // Debug print
+    print("Response status: ${response.statusCode}");
+    print("Response body: ${response.body}");
 
-    if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
-      return data;
+    if (response.statusCode < 299) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 400) {
+      try {
+        final data = jsonDecode(response.body);
+        throw ValidationException(data);
+      } catch (_) {
+        throw Exception('Bad Request');
+      }
+    } else if (response.statusCode == 401) {
+      throw Exception("Unauthorized");
     } else {
-      throw Exception("Unknown error");
+      throw Exception("Something bad happened please try again");
     }
   }
 
@@ -47,14 +62,22 @@ abstract class BaseProvider with ChangeNotifier {
 
     var response =
         await http.post(uri, headers: headers, body: jsonEncode(obj));
-    print("Response status: ${response.statusCode}"); // Debug print
-    print("Response body: ${response.body}"); // Debug print
+    print("Response status: ${response.statusCode}");
+    print("Response body: ${response.body}");
 
-    if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
-      return data;
+    if (response.statusCode < 299) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 400) {
+      try {
+        final data = jsonDecode(response.body);
+        throw ValidationException(data);
+      } catch (_) {
+        throw Exception('Bad Request');
+      }
+    } else if (response.statusCode == 401) {
+      throw Exception("Unauthorized");
     } else {
-      throw Exception("Unknown error");
+      throw Exception("Something bad happened please try again");
     }
   }
 
@@ -67,14 +90,22 @@ abstract class BaseProvider with ChangeNotifier {
 
     var response = await http.post(uri,
         headers: headers, body: body != null ? jsonEncode(body) : null);
-    print("Response status: ${response.statusCode}"); // Debug print
-    print("Response body: ${response.body}"); // Debug print
+    print("Response status: ${response.statusCode}");
+    print("Response body: ${response.body}");
 
-    if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
-      return data;
+    if (response.statusCode < 299) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 400) {
+      try {
+        final data = jsonDecode(response.body);
+        throw ValidationException(data);
+      } catch (_) {
+        throw Exception('Bad Request');
+      }
+    } else if (response.statusCode == 401) {
+      throw Exception("Unauthorized");
     } else {
-      throw Exception("Unknown error");
+      throw Exception("Something bad happened please try again");
     }
   }
 
@@ -87,14 +118,22 @@ abstract class BaseProvider with ChangeNotifier {
 
     var response = await http.put(uri,
         headers: headers, body: body != null ? jsonEncode(body) : null);
-    print("Response status: ${response.statusCode}"); // Debug print
-    print("Response body: ${response.body}"); // Debug print
+    print("Response status: ${response.statusCode}");
+    print("Response body: ${response.body}");
 
-    if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
-      return data;
+    if (response.statusCode < 299) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 400) {
+      try {
+        final data = jsonDecode(response.body);
+        throw ValidationException(data);
+      } catch (_) {
+        throw Exception('Bad Request');
+      }
+    } else if (response.statusCode == 401) {
+      throw Exception("Unauthorized");
     } else {
-      throw Exception("Unknown error");
+      throw Exception("Something bad happened please try again");
     }
   }
 
