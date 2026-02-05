@@ -4,6 +4,8 @@ import 'package:foodking_admin/screens/user_insert_screen.dart';
 import 'package:foodking_admin/widgets/master_screen.dart';
 import 'package:foodking_admin/widgets/foodKing_text_field.dart';
 import 'package:foodking_admin/widgets/User_list_item.dart';
+import 'package:foodking_admin/widgets/korisnici_list_item.dart';
+import 'package:foodking_admin/screens/user_details_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:foodking_admin/models/User.dart';
 import 'package:foodking_admin/utils/pdf_utils.dart';
@@ -18,6 +20,7 @@ class UserListScreen extends StatefulWidget {
 class _UserListScreenState extends State<UserListScreen> {
   late UserProvider _UserProvider;
   List<User> _Users = [];
+  List<dynamic> _UsersJson = [];
   bool _isLoading = true;
   String? _selectedSortBy;
   String? _selectedSortOrder;
@@ -49,6 +52,7 @@ class _UserListScreenState extends State<UserListScreen> {
 
       setState(() {
         final List<dynamic> UsersJson = data['result'] ?? [];
+        _UsersJson = UsersJson;
         _Users = UsersJson.map((json) => User.fromJson(json)).toList();
         _applySorting();
         _isLoading = false;
@@ -268,9 +272,19 @@ class _UserListScreenState extends State<UserListScreen> {
                               itemCount: _Users.length,
                               itemBuilder: (context, index) {
                                 final User = _Users[index];
-                                return UserListItem(
+                                final raw = _UsersJson[index] ?? {};
+                                return KorisniciListItem(
                                   text:
                                       "${User.firstName ?? ''} ${User.lastName ?? ''} (${User.email ?? ''}) ${User.phoneNumber ?? ''}",
+                                  onDetailsPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => UserDetailsScreen(
+                                          userJson: raw as Map<String, dynamic>,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 );
                               },
                             ),

@@ -48,17 +48,17 @@ class _UserInsertScreenState extends State<UserInsertScreen> {
       _formKey.currentState!.save();
 
       final Map<String, dynamic> requestBody = {
-        'FirstName': _firstName,
-        'LastName': _lastName,
-        'PhoneNumber': _phoneNumber,
-        'Email': _email,
-        'Address': _address,
-        'CurrentAddress': _currentAddress,
-        'UserName': _userName,
-        'Password': _password,
-        if (_photoBase64 != null) 'Photo': _photoBase64,
+        'firstName': _firstName,
+        'lastName': _lastName,
+        'phoneNumber': _phoneNumber,
+        'email': _email,
+        'address': _address,
+        'currentAddress': _currentAddress,
+        'userName': _userName,
+        'password': _password,
+        if (_photoBase64 != null) 'photo': _photoBase64,
         if (_selectedRole != null)
-          'RoleId':
+          'role':
               _selectedRole['id'] ?? _selectedRole['Id'] ?? _selectedRole['ID'],
       };
       try {
@@ -81,7 +81,8 @@ class _UserInsertScreenState extends State<UserInsertScreen> {
             final parsed = e.errors;
             _fieldErrors = parsed is Map<String, dynamic>
                 ? parsed
-                : (parsed['errors'] ?? parsed['Errors'] ?? {}) as Map<String, dynamic>;
+                : (parsed['errors'] ?? parsed['Errors'] ?? {})
+                    as Map<String, dynamic>;
           });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Validation errors occurred')),
@@ -105,14 +106,22 @@ class _UserInsertScreenState extends State<UserInsertScreen> {
   }
 
   Future<void> _pickPhoto() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.image);
+    final result = await FilePicker.platform
+        .pickFiles(type: FileType.image, withData: true);
     if (result != null && result.files.isNotEmpty) {
-      final file = File(result.files.single.path!);
-      final bytes = await file.readAsBytes();
-      setState(() {
-        _photoBase64 = base64Encode(bytes);
-        _photoFileName = result.files.single.name;
-      });
+      final picked = result.files.single;
+      // Try to use in-memory bytes first (works on web & desktop).
+      var bytes = picked.bytes;
+      if (bytes == null && picked.path != null) {
+        final file = File(picked.path!);
+        bytes = await file.readAsBytes();
+      }
+      if (bytes != null) {
+        setState(() {
+          _photoBase64 = base64Encode(bytes!);
+          _photoFileName = picked.name;
+        });
+      }
     }
   }
 
