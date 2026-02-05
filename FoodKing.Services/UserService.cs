@@ -24,6 +24,17 @@ namespace FoodKing.Services
         public override async Task BeforeInsert(Database.User entity, UserInsertRequest insert)
         {
             entity.Password = ComputeHash(insert.Password);
+            var role = await _context.Roles.FirstOrDefaultAsync(x => x.Id == insert.Role);
+            if (role != null)
+            {
+                var userHasRole = new Database.UserHasRole
+                {
+                    User = entity,
+                    Role = role
+                };
+                _context.UserHasRoles.Add(userHasRole);
+                await _context.SaveChangesAsync();
+            }
             await base.BeforeInsert(entity, insert);
         }
         public static string ComputeHash(string value)
@@ -72,6 +83,15 @@ namespace FoodKing.Services
             var hash = ComputeHash(password);
 
             if (hash != entity.Password)
+            {
+                return null;
+            }
+            return _mapper.Map<Model.User>(entity);
+        }
+        public async Task<Model.User> GetByID(int id)
+        {
+            var entity = await _context.Users.Include("UserHasRoles.Role").Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (entity == null)
             {
                 return null;
             }

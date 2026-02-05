@@ -23,7 +23,7 @@ namespace FoodKing.Model.Requests
         public string CurrentAddress { get; set; } = null!;
 
         public string Password { get; set; } = null!;
-
+        public int Role { get; set; }
         public string? Photo { get; set; }
     }
 }

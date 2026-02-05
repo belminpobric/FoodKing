@@ -135,7 +135,7 @@ namespace FoodKing.Services.Migrations
                     address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     currentAddress = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    photo = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
+                    photo = table.Column<string>(type: "nvarchar(max)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
