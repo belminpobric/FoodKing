@@ -48,6 +48,7 @@ class _UserListScreenState extends State<UserListScreen> {
       final data = await _UserProvider.getUsers(
         searchString:
             _searchController.text.isNotEmpty ? _searchController.text : null,
+        isRoleIncluded: true,
       );
 
       setState(() {
