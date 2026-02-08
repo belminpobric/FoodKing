@@ -9,6 +9,8 @@ namespace FoodKing.Model.SearchObjects
     public class ProductSearchObject : BaseSearchObject
     {
         public string? Title { get; set; }
+        public decimal? Price { get; set; }
+        public int? Menu { get; set; }
 
     }
 }

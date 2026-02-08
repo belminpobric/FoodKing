@@ -2,6 +2,7 @@
 using FoodKing.Model.Requests;
 using FoodKing.Model.SearchObjects;
 using FoodKing.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodKing.Services
 {
@@ -18,6 +19,10 @@ namespace FoodKing.Services
             {
                 query = query.Where(x => x.Title.StartsWith(search.Title));
             }
+            if (search.Menu != null)
+            {
+                query = query.Include("MenuHasProducts.Menu").Where(x => x.MenuHasProducts.Any(mhp => mhp.Menu.Id == search.Menu));
+            }
             if (search?.SortByCreatedAtDesc == true)
             {
                 query = query.OrderByDescending(x => x.CreatedAt);
@@ -29,6 +34,21 @@ namespace FoodKing.Services
             query = query.Where(x => x.SoftDelete == false || x.SoftDelete == null);
 
             return query;
+        }
+        public override async Task BeforeInsert(Database.Product entity, ProductInsertRequest insert)
+        {
+            var menu = await _context.Menus.FirstOrDefaultAsync(x => x.Id == insert.MenuId);
+            if (menu != null)
+            {
+                var menuHasProduct = new Database.MenuHasProduct
+                {
+                    Menu = menu,
+                    Product = entity
+                };
+                _context.MenuHasProducts.Add(menuHasProduct);
+                await _context.SaveChangesAsync();
+            }
+            await base.BeforeInsert(entity, insert);
         }
         public async Task Delete(int id)
         {

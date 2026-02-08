@@ -270,6 +270,7 @@ class _MenuListScreenState extends State<MenuListScreen> {
                                 final menu = _menus[index];
                                 return MenuListItem(
                                   text: menu.title ?? '',
+                                  menuId: menu.id,
                                 );
                               },
                             ),
