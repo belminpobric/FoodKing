@@ -48,6 +48,17 @@ namespace FoodKing.Services
                 _context.MenuHasProducts.Add(menuHasProduct);
                 await _context.SaveChangesAsync();
             }
+            var dailyMenu = await _context.DailyMenus.FirstOrDefaultAsync(x => x.Id == insert.DailyMenuId);
+            if (dailyMenu != null)
+            {
+                var dailyMenuHasProduct = new Database.DailyMenuHasProduct
+                {
+                    DailyMenu = dailyMenu,
+                    Product = entity
+                };
+                _context.DailyMenuHasProducts.Add(dailyMenuHasProduct);
+                await _context.SaveChangesAsync();
+            }
             await base.BeforeInsert(entity, insert);
         }
         public async Task Delete(int id)

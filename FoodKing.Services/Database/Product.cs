@@ -14,6 +14,7 @@ public partial class Product
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
     public virtual ICollection<MenuHasProduct> MenuHasProducts { get; } = new List<MenuHasProduct>();
+    public virtual ICollection<DailyMenuHasProduct> DailyMenuHasProducts { get; } = new List<DailyMenuHasProduct>();
 
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
     public bool? SoftDelete { get; set; }

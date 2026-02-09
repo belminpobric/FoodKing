@@ -18,6 +18,10 @@ namespace FoodKing.Services
             CreateMap<Model.Requests.MenuInsertRequest, Database.Menu>();
             CreateMap<Model.Requests.MenuUpdateRequest, Database.Menu>();
 
+            CreateMap<Database.DailyMenu, Model.DailyMenu>();
+            CreateMap<Model.Requests.DailyMenuInsertRequest, Database.DailyMenu>();
+            CreateMap<Model.Requests.DailyMenuUpdateRequest, Database.DailyMenu>();
+
             CreateMap<Database.Order, Model.Order>();
             CreateMap<Model.Requests.OrderInsertRequest, Database.Order>();
             CreateMap<Model.Requests.OrderUpdateRequest, Database.Order>();

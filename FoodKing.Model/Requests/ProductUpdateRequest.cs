@@ -11,6 +11,9 @@ namespace FoodKing.Model.Requests
         public string Title { get; set; } = null!;
         public string? Photo { get; set; }
         public decimal? Price { get; set; }
+        public int? MenuId { get; set; }
+        public int? DailyMenuId { get; set; }
+
         public DateTime updatedAt { get; set; } = DateTime.Now;
     }
 }

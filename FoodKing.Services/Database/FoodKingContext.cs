@@ -23,6 +23,7 @@ public partial class FoodKingContext : DbContext
     public virtual DbSet<Menu> Menus { get; set; }
 
     public virtual DbSet<MenuHasProduct> MenuHasProducts { get; set; }
+    public virtual DbSet<DailyMenuHasProduct> DailyMenuHasProducts { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
 
@@ -126,6 +127,28 @@ public partial class FoodKingContext : DbContext
                 .HasConstraintName("MHP_Products_FK");
         });
 
+        modelBuilder.Entity<DailyMenuHasProduct>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__DailyMenuHasP__3214EC07CEED5981");
+
+            entity.ToTable("DailyMenuHasProduct");
+
+            entity.HasIndex(e => e.DailyMenuId, "IX_DailyMenuHasProduct_menuId");
+
+            entity.HasIndex(e => e.ProductId, "IX_DailyMenuHasProduct_productId");
+
+            entity.Property(e => e.DailyMenuId).HasColumnName("dailyMenuId");
+            entity.Property(e => e.ProductId).HasColumnName("productId");
+
+            entity.HasOne(d => d.DailyMenu).WithMany(p => p.DailyMenuHasProducts)
+                .HasForeignKey(d => d.DailyMenuId)
+                .HasConstraintName("DMHP_Menu_FK");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.DailyMenuHasProducts)
+                .HasForeignKey(d => d.ProductId)
+                .HasConstraintName("DMHP_Products_FK");
+        });
+
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Order__3214EC07C862C4AB");
@@ -137,6 +160,17 @@ public partial class FoodKingContext : DbContext
                 .HasColumnType("decimal(8, 2)")
                 .HasColumnName("price");
             entity.Property(e => e.StateMachine).HasColumnName("stateMachine");
+        });
+
+        modelBuilder.Entity<Product>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Product__3214EC07C862C8BB");
+
+            entity.ToTable("Product");
+
+            entity.Property(e => e.Price)
+                .HasColumnType("decimal(8, 2)")
+                .HasColumnName("price");
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>
