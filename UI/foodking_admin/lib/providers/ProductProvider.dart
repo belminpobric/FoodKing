@@ -7,9 +7,13 @@ class ProductProvider extends BaseProvider {
     return super.post(product);
   }
 
-  Future<dynamic> getProducts({int? menuId}) async {
+  Future<dynamic> getProducts({int? menuId, int? dailyMenuId}) async {
     final queryParams = <String, dynamic>{};
-    if (menuId != null) queryParams['Menu'] = menuId;
+    if (menuId != null) {
+      queryParams['Menu'] = menuId;
+    } else if (dailyMenuId != null) {
+      queryParams['DailyMenu'] = dailyMenuId;
+    }
     return super.get(queryParams: queryParams.isNotEmpty ? queryParams : null);
   }
 }

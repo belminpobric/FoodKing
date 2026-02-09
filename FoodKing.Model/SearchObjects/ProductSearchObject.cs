@@ -12,5 +12,7 @@ namespace FoodKing.Model.SearchObjects
         public decimal? Price { get; set; }
         public int? Menu { get; set; }
 
+        public int? DailyMenu { get; set; }
+
     }
 }

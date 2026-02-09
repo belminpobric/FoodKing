@@ -4,11 +4,16 @@ import 'package:provider/provider.dart';
 import 'package:foodking_admin/providers/ProductProvider.dart';
 
 class ProductListScreen extends StatefulWidget {
-  final int menuId;
+  final int? menuId;
+  final int? dailyMenuId;
   final String menuTitle;
 
-  const ProductListScreen(
-      {super.key, required this.menuId, required this.menuTitle});
+  const ProductListScreen({
+    super.key,
+    this.menuId,
+    this.dailyMenuId,
+    required this.menuTitle,
+  });
 
   @override
   State<ProductListScreen> createState() => _ProductListScreenState();
@@ -28,7 +33,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
     setState(() => _loading = true);
     try {
       final provider = context.read<ProductProvider>();
-      final res = await provider.getProducts(menuId: widget.menuId);
+      final res = await provider.getProducts(
+          menuId: widget.menuId, dailyMenuId: widget.dailyMenuId);
       setState(() {
         _products = res is List ? res : (res['result'] ?? res['Result'] ?? []);
       });

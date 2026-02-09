@@ -23,6 +23,10 @@ namespace FoodKing.Services
             {
                 query = query.Include("MenuHasProducts.Menu").Where(x => x.MenuHasProducts.Any(mhp => mhp.Menu.Id == search.Menu));
             }
+            if (search.DailyMenu != null)
+            {
+                query = query.Include("DailyMenuHasProducts.DailyMenu").Where(x => x.DailyMenuHasProducts.Any(dmhp => dmhp.DailyMenu.Id == search.DailyMenu));
+            }
             if (search?.SortByCreatedAtDesc == true)
             {
                 query = query.OrderByDescending(x => x.CreatedAt);

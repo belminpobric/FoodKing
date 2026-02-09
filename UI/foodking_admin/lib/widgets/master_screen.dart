@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodking_admin/screens/login_screen.dart';
 import 'package:foodking_admin/screens/menu_list_screen.dart';
+import 'package:foodking_admin/screens/daily_menu_list_screen.dart';
 import 'package:foodking_admin/screens/user_list_screen.dart';
 import 'package:foodking_admin/utils/auth.dart';
 import '../screens/order_list_screen.dart';
@@ -52,6 +53,17 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const MenuListScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.calendar_today),
+                title: const Text('Dnevni meniji'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const DailyMenuListScreen(),
                     ),
                   );
                 },
