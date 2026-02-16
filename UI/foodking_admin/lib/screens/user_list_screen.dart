@@ -46,7 +46,7 @@ class _UserListScreenState extends State<UserListScreen> {
       });
 
       final data = await _UserProvider.getUsers(
-        searchString:
+        UserName:
             _searchController.text.isNotEmpty ? _searchController.text : null,
         isRoleIncluded: true,
       );

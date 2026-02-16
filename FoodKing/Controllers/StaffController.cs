@@ -9,7 +9,7 @@ namespace FoodKing.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize(Roles = "Staff")]
+    [Authorize(Roles = "Staff, Administrator")]
     public class StaffController : BaseCRUDController<Staff, StaffSearchObject, StaffInsertRequest, StaffUpdateRequest>
     {
         private readonly IStaffService _service;

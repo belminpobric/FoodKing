@@ -2,12 +2,14 @@
 using FoodKing.Model.Requests;
 using FoodKing.Model.SearchObjects;
 using FoodKing.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodKing.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "Administrator, Staff")]
     public class MenuController : BaseCRUDController<Menu, MenuSearchObject, MenuInsertRequest, MenuUpdateRequest>
     {
         private readonly IMenuService _service;

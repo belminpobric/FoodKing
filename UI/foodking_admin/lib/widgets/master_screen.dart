@@ -68,17 +68,19 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   );
                 },
               ),
-              ListTile(
-                leading: const Icon(Icons.group),
-                title: const Text('User'),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const UserListScreen(),
-                    ),
-                  );
-                },
-              ),
+              // Only show User menu to Admin users
+              if (Auth.currentRoles.contains('Administrator'))
+                ListTile(
+                  leading: const Icon(Icons.group),
+                  title: const Text('User'),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const UserListScreen(),
+                      ),
+                    );
+                  },
+                ),
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.logout),

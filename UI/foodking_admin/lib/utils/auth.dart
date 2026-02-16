@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:foodking_admin/providers/UserProvider.dart';
+
+// Manages current user's roles and credentials
 
 class Auth {
   static String? username;
@@ -22,6 +25,36 @@ class Auth {
     };
   }
 
+  // Roles for the currently authenticated user (names only)
+  static List<String> currentRoles = [];
+
+  static Future<void> fetchRolesForCurrentUser() async {
+    currentRoles = [];
+    if (username == null) return;
+    try {
+      final provider = UserProvider();
+      final data = await provider.getUsers(
+        UserName: username,
+        isRoleIncluded: true,
+      );
+
+      final List<dynamic> usersJson = data['result'] ?? [];
+      if (usersJson.isEmpty) return;
+
+      final userJson = usersJson.first;
+      if (userJson['userHasRoles'] is List) {
+        for (final r in (userJson['userHasRoles'] as List)) {
+          try {
+            final name = r?['role']?['name']?.toString();
+            if (name != null && name.isNotEmpty) currentRoles.add(name);
+          } catch (_) {}
+        }
+      }
+    } catch (_) {
+      // ignore errors - roles remain empty
+    }
+  }
+
   static Future<void> saveCredentials(String user, String pass) async {
     username = user;
     password = pass;
@@ -40,6 +73,10 @@ class Auth {
       if (u != null && p != null) {
         username = u;
         password = p;
+        // populate roles for the loaded credentials
+        try {
+          await fetchRolesForCurrentUser();
+        } catch (_) {}
         return true;
       }
     } catch (_) {}

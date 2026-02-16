@@ -2,12 +2,15 @@
 using FoodKing.Model.Requests;
 using FoodKing.Model.SearchObjects;
 using FoodKing.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodKing.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "Administrator, Staff")]
+
     public class DailyMenuController : BaseCRUDController<DailyMenu, DailyMenuSearchObject, DailyMenuInsertRequest, DailyMenuUpdateRequest>
     {
         private readonly IDailyMenuService _service;
