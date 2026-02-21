@@ -1,3 +1,4 @@
+import 'package:customer_app/utils/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/home_screen.dart';
@@ -13,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
@@ -34,9 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const SizedBox(height: 24),
                   TextField(
-                    controller: _emailController,
+                    controller: _usernameController,
                     decoration: const InputDecoration(
-                      labelText: 'Email',
+                      labelText: 'username',
                       prefixIcon: Icon(Icons.email),
                     ),
                   ),
@@ -90,27 +91,49 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleLogin() async {
-    final email = _emailController.text.trim();
+    if (!mounted) return;
+
+    final username = _usernameController.text.trim();
     final password = _passwordController.text;
-    if (email.isEmpty || password.isEmpty) {
-      _showErrorDialog('Please enter both email and password');
+    if (username.isEmpty || password.isEmpty) {
+      _showErrorDialog('Please enter both username and password');
       return;
     }
+    Auth.username = username;
+    Auth.password = password;
     setState(() {
       _isLoading = true;
     });
     final customerProvider = context.read<CustomerProvider>();
-    final customer = await customerProvider.fetchCustomerByEmail(email);
-    if (customer != null) {
-      // Save customer to local storage
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('customer', jsonEncode(customer.toJson()));
+
+    Auth.username = username;
+    Auth.password = password;
+    try {
+      // try a simple request to validate credentials
+      await customerProvider.get();
+      // fetch roles for this user and block customers
+      await Auth.fetchRolesForCurrentUser();
+      if (Auth.currentRoles.contains('Customer')) {
+        // Clear credentials and show localized message
+        await Auth.clearCredentials();
+        if (!mounted) return;
+        _showErrorDialog('Pristup nije dozvoljen.');
+        return;
+      }
+
+      // Persist credentials so a page refresh won't return to login
+      await Auth.saveCredentials(username, password);
       if (!mounted) return;
+
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
       );
-    } else {
-      _showErrorDialog('Invalid email or customer not found');
+    } on Exception catch (e) {
+      if (!mounted) return;
+      print("Login error: ${e.toString()}");
+      _showErrorDialog("Login failed: ${e.toString()}");
     }
     setState(() {
       _isLoading = false;

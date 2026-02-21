@@ -10,7 +10,7 @@ abstract class BaseProvider with ChangeNotifier {
 
   BaseProvider(this.endpoint) {
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://localhost:7003/");
+        defaultValue: "http://10.0.2.2:7003/");
   }
 
   Future<dynamic> get({Map<String, dynamic>? queryParams}) async {
@@ -25,6 +25,7 @@ abstract class BaseProvider with ChangeNotifier {
     print("Request URL: $url"); // Debug print
     var uri = Uri.parse(url);
     var headers = createHeaders();
+    print("Request HEADERS: $headers"); // Debug print
 
     var response = await http.get(uri, headers: headers);
     print("Response status: ${response.statusCode}"); // Debug print
