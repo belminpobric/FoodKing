@@ -50,6 +50,8 @@ namespace FoodKing.Services
             ////////////////////////////////////////////////////////
             CreateMap<Database.UserHasRole, Model.UserHasRole>();
             CreateMap<Database.OrderHasOrderDetail, Model.OrderHasOrderDetail>();
+            CreateMap<Database.MenuHasProduct, Model.MenuHasProduct>();
+
 
         }
     }

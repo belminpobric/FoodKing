@@ -113,13 +113,6 @@ class _LoginScreenState extends State<LoginScreen> {
       await customerProvider.get();
       // fetch roles for this user and block customers
       await Auth.fetchRolesForCurrentUser();
-      if (Auth.currentRoles.contains('Customer')) {
-        // Clear credentials and show localized message
-        await Auth.clearCredentials();
-        if (!mounted) return;
-        _showErrorDialog('Pristup nije dozvoljen.');
-        return;
-      }
 
       // Persist credentials so a page refresh won't return to login
       await Auth.saveCredentials(username, password);

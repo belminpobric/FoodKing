@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/basket_provider.dart';
 import 'providers/customer_provider.dart';
-import 'screens/home_screen.dart';
 import 'screens/profile_screen.dart';
-import 'screens/orders_screen.dart';
-import 'screens/checkout_screen.dart';
 import 'screens/login_screen.dart';
 import 'widgets/global_app_bar.dart';
+import 'models/product.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,6 +36,10 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/* HomeScreen                                                                 */
+/* -------------------------------------------------------------------------- */
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -102,88 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String? title;
-  final bool showLogo;
-  const GlobalAppBar({super.key, this.title, this.showLogo = false});
-
-  @override
-  Widget build(BuildContext context) {
-    final basketCount = context.watch<BasketProvider>().basketCount;
-    return AppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.white,
-      elevation: 0,
-      iconTheme: const IconThemeData(color: Colors.orange),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (showLogo)
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: SizedBox(
-                height: 36,
-                child: Image.asset(
-                  'assets/logo.png',
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.fastfood,
-                      size: 28,
-                      color: Colors.orange),
-                ),
-              ),
-            ),
-          if (title != null)
-            Expanded(
-              child: Text(
-                title!,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: Colors.orange,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22),
-              ),
-            ),
-        ],
-      ),
-      centerTitle: true,
-      actions: [
-        Stack(
-          alignment: Alignment.topRight,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.shopping_basket, color: Colors.orange),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const BasketScreen()),
-                );
-              },
-            ),
-            if (basketCount > 0)
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    '$basketCount',
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
+/* -------------------------------------------------------------------------- */
+/* BasketScreen                                                                */
+/* -------------------------------------------------------------------------- */
 
 class BasketScreen extends StatelessWidget {
   const BasketScreen({super.key});
@@ -191,23 +114,12 @@ class BasketScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final basketProvider = context.watch<BasketProvider>();
-    final basket = basketProvider.basket;
-    // Group items by title and count quantity
-    final Map<String, Map<String, dynamic>> grouped = {};
-    for (var item in basket) {
-      final title = item['title'];
-      if (grouped.containsKey(title)) {
-        grouped[title]!['quantity'] += 1;
-      } else {
-        grouped[title] = Map<String, dynamic>.from(item);
-        grouped[title]!['quantity'] = 1;
-      }
-    }
+    final items = basketProvider.items;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Basket',
-            style:
-                TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+        title: const Text('Košarica',
+            style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.orange),
         elevation: 1,
@@ -216,60 +128,49 @@ class BasketScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: basket.isEmpty
-                ? const Center(child: Text('Your basket is empty.'))
-                : ListView(
-                    children: grouped.values
-                        .map((item) => Card(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              child: ListTile(
-                                title: Text('${item['title']}'),
-                                subtitle: Text(
-                                    '${item['price'].toStringAsFixed(2)} KM'),
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.orange.shade100,
-                                  child: Text('${item['quantity']}',
-                                      style: const TextStyle(
-                                          color: Colors.orange,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.red),
-                                  onPressed: () {
-                                    // Remove all of this item from basket
-                                    for (int i = basket.length - 1;
-                                        i >= 0;
-                                        i--) {
-                                      if (basket[i]['title'] == item['title']) {
-                                        basketProvider
-                                            .removeFromBasket(basket[i]);
-                                      }
-                                    }
-                                  },
-                                ),
-                              ),
-                            ))
-                        .toList(),
+            child: items.isEmpty
+                ? const Center(child: Text('Košarica je prazna.'))
+                : ListView.builder(
+              padding: const EdgeInsets.all(12),
+              itemCount: items.length,
+              itemBuilder: (context, idx) {
+                final it = items[idx];
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: ListTile(
+                    title: Text(it.product.title),
+                    subtitle: Text('${it.product.price.toStringAsFixed(2)} KM'),
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.orange.shade100,
+                      child: Text('${it.quantity}',
+                          style: const TextStyle(
+                              color: Colors.orange, fontWeight: FontWeight.bold)),
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        basketProvider.removeProduct(it.product.id);
+                      },
+                    ),
                   ),
+                );
+              },
+            ),
           ),
-          if (basket.isNotEmpty)
+          if (items.isNotEmpty)
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
                     onPressed: () {
                       Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => const CheckoutScreen()),
+                        MaterialPageRoute(builder: (context) => const CheckoutScreen()),
                       );
                     },
-                    child: const Text('Checkout'),
+                    child: const Text('Na naplatu'),
                   ),
                 ],
               ),
@@ -280,27 +181,32 @@ class BasketScreen extends StatelessWidget {
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/* MenuScreen: '+' adds to basket; quantities tracked by product id           */
+/* -------------------------------------------------------------------------- */
+
 class MenuScreen extends StatelessWidget {
   const MenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Generate 100 test menu items
     final List<Map<String, dynamic>> menuItems = List.generate(
-        100,
-        (i) => {
-              'title': 'Stavka ${i + 1} - naziv',
-              'ingredients': 'Sastojci lista',
-              'price': (i + 1) * 1.0,
-              'rating': 4.0 + (i % 5) * 0.1,
-            });
+      100,
+          (i) => {
+        'id': i + 1,
+        'title': 'Stavka ${i + 1} - naziv',
+        'ingredients': 'Sastojci lista',
+        'price': (i + 1) * 1.0,
+        'rating': 4.0 + (i % 5) * 0.1,
+      },
+    );
+
     final basketProvider = context.watch<BasketProvider>();
 
-    // Helper to get quantity in basket
     int getQuantity(Map<String, dynamic> item) {
-      return basketProvider.basket
-          .where((e) => e['title'] == item['title'])
-          .length;
+      final int id = item['id'] as int;
+      final matches = basketProvider.items.where((bi) => bi.product.id == id);
+      return matches.isEmpty ? 0 : matches.first.quantity;
     }
 
     return SafeArea(
@@ -334,6 +240,10 @@ class MenuScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final item = menuItems[index];
                 final quantity = getQuantity(item);
+                final prod = Product(
+                    id: item['id'] as int,
+                    title: item['title'] as String,
+                    price: (item['price'] as num).toDouble());
                 return Container(
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
@@ -351,83 +261,53 @@ class MenuScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                item['title'],
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87),
+                                item['title'] as String,
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            _buildRatingStars(item['rating']),
+                            _buildRatingStars((item['rating'] as num).toDouble()),
                           ],
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          item['ingredients'],
-                          style: const TextStyle(
-                              fontSize: 14, color: Colors.black54),
+                          item['ingredients'] as String,
+                          style: const TextStyle(fontSize: 14, color: Colors.black54),
                         ),
                         const SizedBox(height: 18),
                         Row(
                           children: [
+                            // Show controls. If quantity == 0 show single + button that adds the product.
                             if (quantity == 0) ...[
-                              OutlinedButton(
+                              IconButton(
+                                icon: const Icon(Icons.add_circle_outline, color: Colors.orange),
                                 onPressed: () {
-                                  basketProvider.addToBasket(item);
+                                  basketProvider.addProduct(prod, 1);
                                 },
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: const Color(0xFF00B2A9),
-                                  side: const BorderSide(
-                                      color: Color(0xFF00B2A9)),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 18, vertical: 0),
-                                  minimumSize: const Size(0, 36),
-                                  textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                child: const Text('Naruči'),
                               ),
                             ] else ...[
-                              Row(
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.remove,
-                                        color: Color(0xFF00B2A9)),
-                                    onPressed: () {
-                                      // Remove one instance
-                                      final idx = basketProvider.basket
-                                          .indexWhere((e) =>
-                                              e['title'] == item['title']);
-                                      if (idx != -1) {
-                                        basketProvider.removeFromBasket(
-                                            basketProvider.basket[idx]);
-                                      }
-                                    },
-                                  ),
-                                  Text('$quantity',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16)),
-                                  IconButton(
-                                    icon: const Icon(Icons.add,
-                                        color: Color(0xFF00B2A9)),
-                                    onPressed: () {
-                                      basketProvider.addToBasket(item);
-                                    },
-                                  ),
-                                ],
+                              IconButton(
+                                icon: const Icon(Icons.remove_circle_outline, color: Colors.orange),
+                                onPressed: () {
+                                  final newQty = quantity - 1;
+                                  if (newQty <= 0) {
+                                    basketProvider.removeProduct(prod.id);
+                                  } else {
+                                    basketProvider.setQuantity(prod.id, newQty);
+                                  }
+                                },
+                              ),
+                              Text('$quantity', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              IconButton(
+                                icon: const Icon(Icons.add_circle_outline, color: Colors.orange),
+                                onPressed: () {
+                                  basketProvider.addProduct(prod, 1);
+                                },
                               ),
                             ],
                             const SizedBox(width: 12),
                             Text(
-                              '${item['price'].toStringAsFixed(2)} KM',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  color: Colors.black87),
+                              '${(item['price'] as num).toDouble().toStringAsFixed(2)} KM',
+                              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black87),
                             ),
                             const Spacer(),
                             Container(
@@ -436,8 +316,7 @@ class MenuScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: IconButton(
-                                icon: const Icon(Icons.comment,
-                                    color: Color(0xFFF9A825)),
+                                icon: const Icon(Icons.comment, color: Color(0xFFF9A825)),
                                 onPressed: () {},
                                 iconSize: 22,
                                 splashRadius: 22,
@@ -465,37 +344,41 @@ class MenuScreen extends StatelessWidget {
       if (i < fullStars) {
         stars.add(const Icon(Icons.star, color: Color(0xFFF9A825), size: 18));
       } else if (i == fullStars && hasHalfStar) {
-        stars.add(
-            const Icon(Icons.star_half, color: Color(0xFFF9A825), size: 18));
+        stars.add(const Icon(Icons.star_half, color: Color(0xFFF9A825), size: 18));
       } else {
-        stars.add(
-            const Icon(Icons.star_border, color: Color(0xFFF9A825), size: 18));
+        stars.add(const Icon(Icons.star_border, color: Color(0xFFF9A825), size: 18));
       }
     }
     return Row(children: stars);
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/* DailyOfferScreen: '+' adds to basket; quantities tracked by product id     */
+/* -------------------------------------------------------------------------- */
+
 class DailyOfferScreen extends StatelessWidget {
   const DailyOfferScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Generate 100 test offers
     final List<Map<String, dynamic>> offers = List.generate(
-        100,
-        (i) => {
-              'title': 'Ponuda ${i + 1} - naziv',
-              'ingredients': 'Sastojci lista',
-              'price': 5.0 + i,
-              'rating': 4.0 + (i % 5) * 0.1,
-            });
+      100,
+          (i) => {
+        'id': 1000 + i + 1,
+        'title': 'Ponuda ${i + 1} - naziv',
+        'ingredients': 'Sastojci lista',
+        'price': 5.0 + i,
+        'rating': 4.0 + (i % 5) * 0.1,
+      },
+    );
+
     final basketProvider = context.watch<BasketProvider>();
 
     int getQuantity(Map<String, dynamic> item) {
-      return basketProvider.basket
-          .where((e) => e['title'] == item['title'])
-          .length;
+      final int id = item['id'] as int;
+      final matches = basketProvider.items.where((bi) => bi.product.id == id);
+      return matches.isEmpty ? 0 : matches.first.quantity;
     }
 
     return SafeArea(
@@ -505,6 +388,12 @@ class DailyOfferScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final item = offers[index];
           final quantity = getQuantity(item);
+          final prod = Product(
+            id: item['id'] as int,
+            title: item['title'] as String,
+            price: (item['price'] as num).toDouble(),
+          );
+
           return Container(
             margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
@@ -522,73 +411,52 @@ class DailyOfferScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          item['title'],
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                          item['title'] as String,
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      _buildRatingStars(item['rating']),
+                      _buildRatingStars((item['rating'] as num).toDouble()),
                     ],
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    item['ingredients'],
+                    item['ingredients'] as String,
                     style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                   const SizedBox(height: 18),
                   Row(
                     children: [
                       if (quantity == 0) ...[
-                        OutlinedButton(
+                        IconButton(
+                          icon: const Icon(Icons.add_circle_outline, color: Colors.orange),
                           onPressed: () {
-                            basketProvider.addToBasket(item);
+                            basketProvider.addProduct(prod, 1);
                           },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.orange,
-                            side: const BorderSide(color: Colors.orange),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 18, vertical: 0),
-                            minimumSize: const Size(0, 36),
-                            textStyle:
-                                const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          child: const Text('Naruči'),
                         ),
                       ] else ...[
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.remove,
-                                  color: Colors.orange),
-                              onPressed: () {
-                                final idx = basketProvider.basket.indexWhere(
-                                    (e) => e['title'] == item['title']);
-                                if (idx != -1) {
-                                  basketProvider.removeFromBasket(
-                                      basketProvider.basket[idx]);
-                                }
-                              },
-                            ),
-                            Text('$quantity',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16)),
-                            IconButton(
-                              icon: const Icon(Icons.add, color: Colors.orange),
-                              onPressed: () {
-                                basketProvider.addToBasket(item);
-                              },
-                            ),
-                          ],
+                        IconButton(
+                          icon: const Icon(Icons.remove_circle_outline, color: Colors.orange),
+                          onPressed: () {
+                            final newQty = quantity - 1;
+                            if (newQty <= 0) {
+                              basketProvider.removeProduct(prod.id);
+                            } else {
+                              basketProvider.setQuantity(prod.id, newQty);
+                            }
+                          },
+                        ),
+                        Text('$quantity', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        IconButton(
+                          icon: const Icon(Icons.add_circle_outline, color: Colors.orange),
+                          onPressed: () {
+                            basketProvider.addProduct(prod, 1);
+                          },
                         ),
                       ],
                       const SizedBox(width: 12),
                       Text(
-                        '${item['price'].toStringAsFixed(2)} KM',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                        '${(item['price'] as num).toDouble().toStringAsFixed(2)} KM',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       const Spacer(),
                       Container(
@@ -597,8 +465,7 @@ class DailyOfferScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: IconButton(
-                          icon: const Icon(Icons.comment,
-                              color: Color(0xFFF9A825)),
+                          icon: const Icon(Icons.comment, color: Color(0xFFF9A825)),
                           onPressed: () {},
                           iconSize: 22,
                           splashRadius: 22,
@@ -623,16 +490,18 @@ class DailyOfferScreen extends StatelessWidget {
       if (i < fullStars) {
         stars.add(const Icon(Icons.star, color: Color(0xFFF9A825), size: 18));
       } else if (i == fullStars && hasHalfStar) {
-        stars.add(
-            const Icon(Icons.star_half, color: Color(0xFFF9A825), size: 18));
+        stars.add(const Icon(Icons.star_half, color: Color(0xFFF9A825), size: 18));
       } else {
-        stars.add(
-            const Icon(Icons.star_border, color: Color(0xFFF9A825), size: 18));
+        stars.add(const Icon(Icons.star_border, color: Color(0xFFF9A825), size: 18));
       }
     }
     return Row(children: stars);
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/* OrdersScreen                                                                */
+/* -------------------------------------------------------------------------- */
 
 class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
@@ -645,7 +514,7 @@ class OrdersScreen extends StatelessWidget {
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: 5, // Example count
+        itemCount: 5,
         itemBuilder: (context, index) {
           return Card(
             margin: const EdgeInsets.only(bottom: 16),
@@ -662,10 +531,7 @@ class OrdersScreen extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.green[100],
                           borderRadius: BorderRadius.circular(12),
@@ -700,31 +566,23 @@ class OrdersScreen extends StatelessWidget {
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/* CheckoutScreen                                                              */
+/* -------------------------------------------------------------------------- */
+
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final basketProvider = context.watch<BasketProvider>();
-    final basket = basketProvider.basket;
-    // Group items by title and count quantity
-    final Map<String, Map<String, dynamic>> grouped = {};
-    for (var item in basket) {
-      final title = item['title'];
-      if (grouped.containsKey(title)) {
-        grouped[title]!['quantity'] += 1;
-      } else {
-        grouped[title] = Map<String, dynamic>.from(item);
-        grouped[title]!['quantity'] = 1;
-      }
-    }
-    double total = grouped.values
-        .fold(0.0, (sum, item) => sum + (item['price'] * item['quantity']));
+    final items = basketProvider.items;
+
+    double total = items.fold(0.0, (sum, it) => sum + it.product.price * it.quantity);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Checkout',
-            style:
-                TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+        title: const Text('Checkout', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.orange),
         elevation: 1,
@@ -733,47 +591,36 @@ class CheckoutScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: grouped.isEmpty
+            child: items.isEmpty
                 ? const Center(child: Text('Your basket is empty.'))
                 : ListView(
-                    children: grouped.values
-                        .map((item) => ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.orange.shade100,
-                                child: Text('${item['quantity']}',
-                                    style: const TextStyle(
-                                        color: Colors.orange,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                              title: Text(item['title']),
-                              subtitle: Text(
-                                  '${item['price'].toStringAsFixed(2)} KM'),
-                              trailing: Text(
-                                  '${(item['price'] * item['quantity']).toStringAsFixed(2)} KM',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold)),
-                            ))
-                        .toList(),
-                  ),
+              children: items
+                  .map((it) => ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.orange.shade100,
+                  child: Text('${it.quantity}',
+                      style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                ),
+                title: Text(it.product.title),
+                subtitle: Text('${it.product.price.toStringAsFixed(2)} KM'),
+                trailing: Text('${(it.product.price * it.quantity).toStringAsFixed(2)} KM',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+              ))
+                  .toList(),
+            ),
           ),
-          if (basket.isNotEmpty)
+          if (items.isNotEmpty)
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Total:',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      const Text('Total:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       Text('${total.toStringAsFixed(2)} KM',
-                          style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange)),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange)),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -782,20 +629,15 @@ class CheckoutScreen extends StatelessWidget {
                       backgroundColor: Colors.orange,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      textStyle: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    onPressed: grouped.isEmpty
+                    onPressed: items.isEmpty
                         ? null
                         : () {
-                            // TODO: Implement order placement logic
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Order placed!')),
-                            );
-                            Navigator.of(context)
-                                .popUntil((route) => route.isFirst);
-                            basketProvider.clearBasket();
-                          },
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Narudžba poslana!')));
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      basketProvider.clear();
+                    },
                     child: const Text('Place Order'),
                   ),
                 ],

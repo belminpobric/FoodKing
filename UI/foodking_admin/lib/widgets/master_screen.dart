@@ -46,28 +46,30 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   );
                 },
               ),
-              ListTile(
-                leading: const Icon(Icons.restaurant_menu),
-                title: const Text('Menu'),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const MenuListScreen(),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.calendar_today),
-                title: const Text('Dnevni meniji'),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const DailyMenuListScreen(),
-                    ),
-                  );
-                },
-              ),
+              if (Auth.currentRoles.contains('Administrator'))
+                ListTile(
+                  leading: const Icon(Icons.restaurant_menu),
+                  title: const Text('Menu'),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const MenuListScreen(),
+                      ),
+                    );
+                  },
+                ),
+              if (Auth.currentRoles.contains('Administrator'))
+                ListTile(
+                  leading: const Icon(Icons.calendar_today),
+                  title: const Text('Dnevni meniji'),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const DailyMenuListScreen(),
+                      ),
+                    );
+                  },
+                ),
               // Only show User menu to Admin users
               if (Auth.currentRoles.contains('Administrator'))
                 ListTile(

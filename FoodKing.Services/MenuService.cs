@@ -2,6 +2,7 @@
 using FoodKing.Model.Requests;
 using FoodKing.Model.SearchObjects;
 using FoodKing.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodKing.Services
 {
@@ -25,6 +26,11 @@ namespace FoodKing.Services
             else
             {
                 query = query.OrderBy(x => x.CreatedAt);
+            }
+
+            if (search?.isProductIncluded == true)
+            {
+                query = query.Include("MenuHasProducts.Product");
             }
             query = query.Where(x => x.SoftDelete == false || x.SoftDelete == null);
 

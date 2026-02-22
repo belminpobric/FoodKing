@@ -9,6 +9,7 @@ namespace FoodKing.Model.SearchObjects
     public class MenuSearchObject : BaseSearchObject
     {
         public string? Title { get; set; }
+        public bool? isProductIncluded { get; set; }
 
     }
 }
